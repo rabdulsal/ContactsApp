@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4C47C3B11F294EF800A92B24 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C47C3B01F294EF800A92B24 /* AppDelegate.swift */; };
-		4C47C3B31F294EF800A92B24 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C47C3B21F294EF800A92B24 /* FirstViewController.swift */; };
-		4C47C3B51F294EF800A92B24 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C47C3B41F294EF800A92B24 /* SecondViewController.swift */; };
+		4C47C3B31F294EF800A92B24 /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C47C3B21F294EF800A92B24 /* ContactsViewController.swift */; };
+		4C47C3B51F294EF800A92B24 /* EditContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C47C3B41F294EF800A92B24 /* EditContactViewController.swift */; };
 		4C47C3B81F294EF800A92B24 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C47C3B61F294EF800A92B24 /* Main.storyboard */; };
 		4C47C3BA1F294EF800A92B24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C47C3B91F294EF800A92B24 /* Assets.xcassets */; };
 		4C47C3BD1F294EF800A92B24 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C47C3BB1F294EF800A92B24 /* LaunchScreen.storyboard */; };
@@ -37,8 +37,8 @@
 /* Begin PBXFileReference section */
 		4C47C3AD1F294EF800A92B24 /* ContactsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C47C3B01F294EF800A92B24 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4C47C3B21F294EF800A92B24 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		4C47C3B41F294EF800A92B24 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		4C47C3B21F294EF800A92B24 /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
+		4C47C3B41F294EF800A92B24 /* EditContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditContactViewController.swift; sourceTree = "<group>"; };
 		4C47C3B71F294EF800A92B24 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4C47C3B91F294EF800A92B24 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4C47C3BC1F294EF800A92B24 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -100,8 +100,8 @@
 			isa = PBXGroup;
 			children = (
 				4C47C3B01F294EF800A92B24 /* AppDelegate.swift */,
-				4C47C3B21F294EF800A92B24 /* FirstViewController.swift */,
-				4C47C3B41F294EF800A92B24 /* SecondViewController.swift */,
+				4C47C3B21F294EF800A92B24 /* ContactsViewController.swift */,
+				4C47C3B41F294EF800A92B24 /* EditContactViewController.swift */,
 				4C47C3B61F294EF800A92B24 /* Main.storyboard */,
 				4C47C3B91F294EF800A92B24 /* Assets.xcassets */,
 				4C47C3BB1F294EF800A92B24 /* LaunchScreen.storyboard */,
@@ -265,9 +265,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C47C3B51F294EF800A92B24 /* SecondViewController.swift in Sources */,
+				4C47C3B51F294EF800A92B24 /* EditContactViewController.swift in Sources */,
 				4C47C3B11F294EF800A92B24 /* AppDelegate.swift in Sources */,
-				4C47C3B31F294EF800A92B24 /* FirstViewController.swift in Sources */,
+				4C47C3B31F294EF800A92B24 /* ContactsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

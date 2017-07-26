@@ -1,5 +1,5 @@
 //
-//  SecondViewController.swift
+//  EditContactViewController.swift
 //  ContactsApp
 //
 //  Created by Rashad Abdul-Salaam on 7/26/17.
@@ -8,7 +8,9 @@
 
 import UIKit
 
-class SecondViewController: UIViewController {
+class EditContactViewController: UIViewController {
+    
+    // For creating new accounts and editing existing accounts
 
     override func viewDidLoad() {
         super.viewDidLoad()

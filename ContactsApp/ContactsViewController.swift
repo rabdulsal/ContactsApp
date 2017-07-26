@@ -1,5 +1,5 @@
 //
-//  FirstViewController.swift
+//  ContactsViewController.swift
 //  ContactsApp
 //
 //  Created by Rashad Abdul-Salaam on 7/26/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FirstViewController: UIViewController {
+class ContactsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

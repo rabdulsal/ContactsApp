@@ -38,12 +38,12 @@ class EditContactViewController: UIViewController {
     @IBOutlet weak var fourDigitField: UITextField!
     
     
-    var updateContext: EditUserContext = .newUser
     var contactDelegate: ContactCreatable?
-
+    var editingContact: Contact?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        setup()
     }
 
     override func didReceiveMemoryWarning() {
@@ -94,5 +94,29 @@ class EditContactViewController: UIViewController {
     }
     
     
+}
+
+fileprivate extension EditContactViewController {
+    func setup() {
+        if let contact = editingContact {
+            decorateTextfields(with: contact)
+        }
+    }
+    
+    func decorateTextfields(with contact: Contact) {
+        firstNameField.text = contact.firstName
+        lastNameField.text  = contact.lastName
+        zipcodeField.text   = contact.zipcode
+        
+        
+        //birthMonthField: UITextField!
+       // birthDateField: UITextField!
+        //birthYearField: UITextField!
+        
+        
+        //areacodeField.text  = contact.areacode
+        //threeDigitField: UITextField!
+        //fourDigitField: UITextField!
+    }
 }
 

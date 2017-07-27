@@ -21,9 +21,23 @@ class ContactsAppTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testContactConstructor() {
+        // Given
+        let firstName = "Bob"
+        let lastName  = "Loweth"
+        let birthday  = "03/17/1940"
+        let phone     = "(312) 369-9850"
+        let zipcode   = "08003"
+        
+        // When
+        let contact = Contact(firstName: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
+        
+        // Then
+        XCTAssertTrue(contact.firstName == firstName, "FirstName should be \(firstName)")
+        XCTAssertTrue(contact.lastName == lastName, "LastName should be \(lastName)")
+        XCTAssertTrue(contact.birthday == birthday, "Birthday should be \(birthday)")
+        XCTAssertTrue(contact.phone == phone, "Phone should be \(phone)")
+        XCTAssertTrue(contact.zipcode == zipcode, "Zipcode should be \(zipcode)")
     }
     
     func testPerformanceExample() {

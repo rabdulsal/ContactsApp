@@ -22,6 +22,9 @@ class EditContactViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-
+    @IBAction func pressedCancelButton(_ sender: Any) {
+        // TODO: Alert requesting 'Are you sure'
+        self.dismiss(animated: true)
+    }
 }
 

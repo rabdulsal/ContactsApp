@@ -28,26 +28,4 @@ class ContactService {
         
         return "\(birthMonth)/\(birthDay)/\(birthYear)"
     }
-    
-    static func makeContact(from managedObjects: [NSManagedObject]) -> [Contact] {
-        var contacts = [Contact]()
-        for object in managedObjects {
-            if
-                let fName = object.value(forKey: PropertyKeys.firstName.rawValue) as? String,
-                let lName = object.value(forKey: PropertyKeys.lastName.rawValue) as? String,
-                let bday = object.value(forKey: PropertyKeys.birthday.rawValue) as? String,
-                let phone = object.value(forKey: PropertyKeys.phone.rawValue) as? String,
-                let zip = object.value(forKey: PropertyKeys.zipcode.rawValue) as? String
-            {
-            let contact = Contact(
-                firstName: fName,
-                lastName: lName,
-                birthday: bday,
-                phone: phone,
-                zipcode: zip)
-                contacts.append(contact)
-            }
-        }
-        return contacts
-    }
 }

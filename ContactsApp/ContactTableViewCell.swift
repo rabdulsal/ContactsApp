@@ -16,6 +16,6 @@ class ContactTableViewCell : UITableViewCell {
     @IBOutlet weak var contactNameLabel: UILabel!
     
     func configureContactCell(contact: Contact) {
-        contactNameLabel.text = contact.fullName
+        contactNameLabel.text = "\(contact.firstName!) \(contact.lastName!)"
     }
 }

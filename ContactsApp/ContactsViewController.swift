@@ -35,19 +35,8 @@ class ContactsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        
-        let managedContext = appDelegate.persistentContainer.viewContext
-        
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Person")
-        
-        do {
-            contacts = try managedContext.fetch(fetchRequest)
-            // TODO: Transform contacts<Array, NSManagedObject> in to allContacts<Array, Contact>
-            allContacts = ContactService.makeContact(from: contacts)
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
+        getData()
+        contactsTableView.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -115,6 +104,22 @@ fileprivate extension ContactsViewController {
         contactsTableView.delegate = self
         contactsTableView.dataSource = self
         noContactsView.isHidden = false
+    }
+    
+    func getData() {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        //let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Person")
+        
+        do {
+            allContacts = try managedContext.fetch(Contact.fetchRequest())
+            // TODO: Transform contacts<Array, NSManagedObject> in to allContacts<Array, Contact>
+            //allContacts = ContactService.makeContact(from: contacts)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
     }
 }
 

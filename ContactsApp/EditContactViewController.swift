@@ -89,8 +89,8 @@ class EditContactViewController: UIViewController {
         
         let phone = ContactService.makePhoneNumber(with: areacode, firstThreeDigits: threeDigit, lastFourDigits: fourDigit)
         let birthday = ContactService.makeBirthDate(with: birthMo, birthDay: birthdate, birthYear: birthYear)
-        let contact = Contact(firstName: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
-        
+        //let contact = Contact(firstName: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
+        saveContact(with: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
     }
     
     
@@ -119,28 +119,38 @@ fileprivate extension EditContactViewController {
         //fourDigitField: UITextField!
     }
     
-    func save(contact: Contact) {
+    func saveContact(with firstName: String, lastName: String, birthday: String, phone: String, zipcode: String) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
         let managedContext = appDelegate.persistentContainer.viewContext
         
-        let entity = NSEntityDescription.entity(forEntityName: "Person", in: managedContext)!
+        let contact = Contact(context: managedContext)
+        contact.firstName = firstName
+        contact.lastName = lastName
+        contact.birthday = birthday
+        contact.phone = phone
+        contact.zipcode = zipcode
         
-        let person = NSManagedObject(entity: entity, insertInto: managedContext)
+        //let entity = NSEntityDescription.entity(forEntityName: "Contact", in: managedContext)!
         
-        person.setValue(contact.firstName, forKeyPath: "firstName")
-        person.setValue(contact.lastName, forKeyPath: "lastName")
-        person.setValue(contact.birthday, forKeyPath: "birthday")
-        person.setValue(contact.phone, forKeyPath: "phone")
-        person.setValue(contact.zipcode, forKeyPath: "zipcode")
+        //let contact = NSManagedObject(entity: entity, insertInto: managedContext)
         
-        do {
-            try managedContext.save()
-            contactDelegate?.didSuccessfullyCreateContact(contact: contact)
-            self.dismiss(animated: true)
-        } catch let error as NSError {
-            print("Coould not save. \(error), \(error.userInfo)")
-        }
+        //contact.setValue(firstName, forKeyPath: "firstName")
+        //contact.setValue(lastName, forKeyPath: "lastName")
+        //contact.setValue(birthday, forKeyPath: "birthday")
+        //contact.setValue(phone, forKeyPath: "phone")
+        //contact.setValue(zipcode, forKeyPath: "zipcode")
+        appDelegate.saveContext()
+        self.dismiss(animated: true)
+        
+        // OLD CODE
+        //do {
+        //    try managedContext.save()
+        //    contactDelegate?.didSuccessfullyCreateContact(contact: contact)
+        //    self.dismiss(animated: true)
+        //} catch let error as NSError {
+        //    print("Coould not save. \(error), \(error.userInfo)")
+        //}
     }
 }
 

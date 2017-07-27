@@ -54,7 +54,7 @@ extension ContactViewController : ContactCreatable {
 
 fileprivate extension ContactViewController {
     func decorateView(with contact: Contact) {
-        contactNameLabel.text   = contact.fullName
+        contactNameLabel.text   = "\(contact.firstName!) \(contact.lastName!)"
         birthdayLabel.text      = contact.birthday
         phoneNumberLabel.text   = contact.phone
         zipcodeLabel.text       = contact.zipcode

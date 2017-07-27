@@ -11,11 +11,13 @@ import UIKit
 
 class ContactViewController : UIViewController {
     
-    // TODO: Contact Class
+    @IBOutlet weak var contactNameLabel: UILabel!
+    
+    var contact: Contact!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Load
+        contactNameLabel.text = contact.fullName
     }
 }

@@ -13,7 +13,7 @@
         <!--Your Contacts-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
-                <viewController id="9pv-A4-QxB" customClass="FirstViewController" customModule="ContactsApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="9pv-A4-QxB" customClass="ContactsViewController" customModule="ContactsApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ia1-K6-d13"/>
                         <viewControllerLayoutGuide type="bottom" id="4ug-Mw-9AY"/>
@@ -50,11 +50,11 @@
                                 <rect key="frame" x="0.0" y="172" width="375" height="495"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" rowHeight="60" id="ZEA-QE-hou">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ContactCellID" rowHeight="60" id="ZEA-QE-hou" customClass="ContactTableViewCell" customModule="ContactsApp" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZEA-QE-hou" id="Bwf-BJ-JV6">
-                                            <rect key="frame" x="0.0" y="0.0" width="342" height="59.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="342" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aaP-Ap-cDE">
@@ -78,6 +78,10 @@
                                                 <constraint firstItem="7gB-WR-dBf" firstAttribute="leading" secondItem="aaP-Ap-cDE" secondAttribute="trailing" constant="8" id="ZXF-aS-JTx"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="contactImageView" destination="aaP-Ap-cDE" id="pN1-uq-c0c"/>
+                                            <outlet property="contactNameLabel" destination="7gB-WR-dBf" id="9Vw-5S-Ayc"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -96,12 +100,15 @@
                     <navigationItem key="navigationItem" title="Your Contacts" id="aXA-kq-Idn">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="24S-lr-9fx">
                             <connections>
-                                <segue destination="Fyc-1v-eGD" kind="presentation" id="IZg-Pe-o9v"/>
+                                <action selector="pressedAddButton:" destination="9pv-A4-QxB" id="yrW-FN-e9l"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="contactsTableView" destination="hiH-rx-pHb" id="hsf-HD-BYH"/>
+                        <outlet property="noContactsView" destination="bOA-IM-1A1" id="hgh-U9-VBe"/>
                         <segue destination="QqQ-KJ-9x5" kind="show" identifier="GoToContact" id="lIT-Pz-0B9"/>
+                        <segue destination="Fyc-1v-eGD" kind="presentation" identifier="GoToEditContact" id="6Ma-Y1-t95"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
@@ -111,7 +118,7 @@
         <!--Edit Contact-->
         <scene sceneID="wg7-f3-ORb">
             <objects>
-                <viewController id="8rJ-Kc-sve" customClass="EditContactViewController" customModule="ContactsApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EditContactVCID" id="8rJ-Kc-sve" customClass="EditContactViewController" customModule="ContactsApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="L7p-HK-0SC"/>
                         <viewControllerLayoutGuide type="bottom" id="Djb-ko-YwX"/>
@@ -354,25 +361,37 @@
                     <view key="view" contentMode="scaleToFill" id="sa8-kl-oUk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G8f-Kw-3eH">
+                                <rect key="frame" x="166" y="123" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="G8f-Kw-3eH" firstAttribute="centerY" secondItem="sa8-kl-oUk" secondAttribute="centerY" id="oTk-XV-MzH"/>
+                            <constraint firstItem="G8f-Kw-3eH" firstAttribute="centerX" secondItem="sa8-kl-oUk" secondAttribute="centerX" id="qZD-2y-iqi"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Contact" id="jQm-vG-fjv">
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="JBa-wu-RxB">
-                            <connections>
-                                <segue destination="Fyc-1v-eGD" kind="presentation" id="LxD-mT-4vm"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="JBa-wu-RxB"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="contactNameLabel" destination="G8f-Kw-3eH" id="hIW-0h-noj"/>
+                        <segue destination="Fyc-1v-eGD" kind="presentation" identifier="GoToEditContact" id="DHx-AU-fHj"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FAj-nB-if9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1905" y="406"/>
+            <point key="canvasLocation" x="1785" y="440"/>
         </scene>
     </scenes>
     <resources>
         <image name="first" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="IZg-Pe-o9v"/>
+        <segue reference="6Ma-Y1-t95"/>
     </inferredMetricsTieBreakers>
 </document>

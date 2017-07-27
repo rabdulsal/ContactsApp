@@ -15,6 +15,9 @@ class Contact : NSObject {
     var birthday: String // User helper method/class to construct bday from 3 separate strings
     var phone: String
     var zipcode: String
+    var fullName: String {
+        return "\(firstName) \(lastName)"
+    }
     
     init(
         firstName: String,

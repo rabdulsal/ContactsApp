@@ -31,13 +31,20 @@ class ContactsAppTests: XCTestCase {
         super.tearDown()
     }
     
-    func testContactConstructor() {
+    func makeContact() -> Contact {
+        let birthday = "01/01/1940"
+        let phone = "(312) 123-4567"
         
+        return Contact(firstName: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
+    }
+    
+    func testContactConstructor() {
+        // Given
         let birthday = "01/01/1940"
         let phone = "(312) 123-4567"
         
         // When
-        let contact = Contact(firstName: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
+        let contact = makeContact()
         
         // Then
         XCTAssertTrue(contact.firstName == firstName, "FirstName should be \(firstName)")
@@ -45,6 +52,13 @@ class ContactsAppTests: XCTestCase {
         XCTAssertTrue(contact.birthday == birthday, "Birthday should be \(birthday)")
         XCTAssertTrue(contact.phone == phone, "Phone should be \(phone)")
         XCTAssertTrue(contact.zipcode == zipcode, "Zipcode should be \(zipcode)")
+    }
+    
+    func testContactDisplayFullName() {
+        let contact = makeContact()
+        let fullName = "Bob Loweth"
+        
+        XCTAssertTrue(contact.fullName == fullName, "FullName is \(contact.fullName), it should be \(fullName)")
     }
     
     func testContactServiceBirthdayConstructor() {

@@ -117,7 +117,6 @@
 				4C47C3B91F294EF800A92B24 /* Assets.xcassets */,
 				4C47C3BB1F294EF800A92B24 /* LaunchScreen.storyboard */,
 				4C47C3BE1F294EF800A92B24 /* Info.plist */,
-				4C47C3E01F29796800A92B24 /* ContactViewController.swift */,
 			);
 			path = ContactsApp;
 			sourceTree = "<group>";
@@ -160,6 +159,7 @@
 		4C47C3E41F297A5800A92B24 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				4C47C3E01F29796800A92B24 /* ContactViewController.swift */,
 				4C47C3B21F294EF800A92B24 /* ContactsViewController.swift */,
 				4C47C3B41F294EF800A92B24 /* EditContactViewController.swift */,
 			);

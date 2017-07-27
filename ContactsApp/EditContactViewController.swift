@@ -39,6 +39,7 @@ class EditContactViewController: UIViewController {
     
     
     var updateContext: EditUserContext = .newUser
+    var contactDelegate: ContactCreatable?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,6 +60,37 @@ class EditContactViewController: UIViewController {
     
     @IBAction func pressedUpdateContactButton(_ sender: Any) {
         // Run UpdateContactService to store / update Core Data
+        
+        guard
+            let firstName = firstNameField.text,
+            let lastName = lastNameField.text,
+            let zipcode = zipcodeField.text else
+        {
+            return
+        }
+        
+        guard
+            let areacode = areacodeField.text,
+            let threeDigit = threeDigitField.text,
+            let fourDigit = fourDigitField.text else
+        {
+            return
+        }
+        
+        guard
+            let birthMo = birthMonthField.text,
+            let birthdate = birthDateField.text,
+            let birthYear = birthYearField.text else
+        {
+            return
+        }
+        
+        
+        let phone = ContactService.makePhoneNumber(with: areacode, firstThreeDigits: threeDigit, lastFourDigits: fourDigit)
+        let birthday = ContactService.makeBirthDate(with: birthMo, birthDay: birthdate, birthYear: birthYear)
+        let contact = Contact(firstName: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
+        contactDelegate?.didSuccessfullyCreateContact(contact: contact)
+        self.dismiss(animated: true)
     }
     
     

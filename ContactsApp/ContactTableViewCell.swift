@@ -11,4 +11,11 @@ import UIKit
 
 class ContactTableViewCell : UITableViewCell {
     
+    
+    @IBOutlet weak var contactImageView: UIImageView!
+    @IBOutlet weak var contactNameLabel: UILabel!
+    
+    func configureContactCell(contact: Contact) {
+        contactNameLabel.text = contact.fullName
+    }
 }

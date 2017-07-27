@@ -18,6 +18,7 @@
 		4C47C3E11F29796800A92B24 /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C47C3E01F29796800A92B24 /* ContactViewController.swift */; };
 		4C47C3E61F297A7500A92B24 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C47C3E51F297A7500A92B24 /* Contact.swift */; };
 		4C47C3EC1F297ED400A92B24 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C47C3E51F297A7500A92B24 /* Contact.swift */; };
+		4C47C3EE1F29873000A92B24 /* ContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C47C3ED1F29873000A92B24 /* ContactTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		4C47C3D41F294EF800A92B24 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C47C3E01F29796800A92B24 /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		4C47C3E51F297A7500A92B24 /* Contact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
+		4C47C3ED1F29873000A92B24 /* ContactTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +148,7 @@
 		4C47C3E31F297A4600A92B24 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4C47C3ED1F29873000A92B24 /* ContactTableViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -296,6 +299,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C47C3EE1F29873000A92B24 /* ContactTableViewCell.swift in Sources */,
 				4C47C3B51F294EF800A92B24 /* EditContactViewController.swift in Sources */,
 				4C47C3E11F29796800A92B24 /* ContactViewController.swift in Sources */,
 				4C47C3E61F297A7500A92B24 /* Contact.swift in Sources */,

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 enum SegueIDs : String {
     case contact = "GoToContact"
@@ -25,15 +26,28 @@ class ContactsViewController: UIViewController {
     
     var selectedContact: Contact?
     var allContacts = [Contact]()
+    var contacts = [NSManagedObject]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Person")
+        
+        do {
+            contacts = try managedContext.fetch(fetchRequest)
+            // TODO: Transform contacts<Array, NSManagedObject> in to allContacts<Array, Contact>
+            allContacts = ContactService.makeContact(from: contacts)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -74,14 +88,10 @@ extension ContactsViewController : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: UITableViewCell
-        if let contact = selectedContact {
-            let c = tableView.dequeueReusableCell(withIdentifier: "ContactCellID") as! ContactTableViewCell
-            c.configureContactCell(contact: contact)
-            cell = c
-        } else {
-            cell = UITableViewCell()
-        }
+        
+        let contact = allContacts[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ContactCellID") as! ContactTableViewCell
+        cell.configureContactCell(contact: contact)
         return cell
     }
 }

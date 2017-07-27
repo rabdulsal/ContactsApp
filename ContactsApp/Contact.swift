@@ -10,6 +10,13 @@ import Foundation
 import CoreData
 
 class Contact : NSObject {
+    enum PropertyKeys : String {
+        case firstName = "firstName"
+        case lastName = "lastName"
+        case birthday = "birthday"
+        case phone = "phone"
+        case zipcode = "zipcode"
+    }
     
     var firstName: String
     var lastName: String

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 enum EditUserContext : Int {
     case newUser = 0
@@ -89,8 +90,7 @@ class EditContactViewController: UIViewController {
         let phone = ContactService.makePhoneNumber(with: areacode, firstThreeDigits: threeDigit, lastFourDigits: fourDigit)
         let birthday = ContactService.makeBirthDate(with: birthMo, birthDay: birthdate, birthYear: birthYear)
         let contact = Contact(firstName: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
-        contactDelegate?.didSuccessfullyCreateContact(contact: contact)
-        self.dismiss(animated: true)
+        
     }
     
     
@@ -117,6 +117,30 @@ fileprivate extension EditContactViewController {
         //areacodeField.text  = contact.areacode
         //threeDigitField: UITextField!
         //fourDigitField: UITextField!
+    }
+    
+    func save(contact: Contact) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Person", in: managedContext)!
+        
+        let person = NSManagedObject(entity: entity, insertInto: managedContext)
+        
+        person.setValue(contact.firstName, forKeyPath: "firstName")
+        person.setValue(contact.lastName, forKeyPath: "lastName")
+        person.setValue(contact.birthday, forKeyPath: "birthday")
+        person.setValue(contact.phone, forKeyPath: "phone")
+        person.setValue(contact.zipcode, forKeyPath: "zipcode")
+        
+        do {
+            try managedContext.save()
+            contactDelegate?.didSuccessfullyCreateContact(contact: contact)
+            self.dismiss(animated: true)
+        } catch let error as NSError {
+            print("Coould not save. \(error), \(error.userInfo)")
+        }
     }
 }
 

@@ -11,6 +11,16 @@ import XCTest
 
 class ContactsAppTests: XCTestCase {
     
+    let firstName   = "Bob"
+    let lastName    = "Loweth"
+    let birthMo     = "01"
+    let birthDay    = "01"
+    let birthYr     = "1900"
+    let areacode    = "312"
+    let firstThree  = "123"
+    let lastFour    = "4567"
+    let zipcode     = "08003"
+    
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -22,12 +32,9 @@ class ContactsAppTests: XCTestCase {
     }
     
     func testContactConstructor() {
-        // Given
-        let firstName = "Bob"
-        let lastName  = "Loweth"
-        let birthday  = "03/17/1940"
-        let phone     = "(312) 369-9850"
-        let zipcode   = "08003"
+        
+        let birthday = "01/01/1940"
+        let phone = "(312) 123-4567"
         
         // When
         let contact = Contact(firstName: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
@@ -40,11 +47,24 @@ class ContactsAppTests: XCTestCase {
         XCTAssertTrue(contact.zipcode == zipcode, "Zipcode should be \(zipcode)")
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    func testContactServiceBirthdayConstructor() {
+        // Given
+        
+        
+        // When
+        let fullBirthDay = ContactService.makeBirthDate(with: birthMo, birthDay: birthDay, birthYear: birthYr)
+        
+        // Then
+        XCTAssertTrue(fullBirthDay == "01/01/1900", "Birthday is \(fullBirthDay) it should be \(birthMo)/\(birthDay)/\(birthYr)")
+    }
+    
+    func testContactServicePhoneNumberConstructor() {
+        
+        // When
+        let fullPhone = ContactService.makePhoneNumber(with: areacode, firstThreeDigits: firstThree, lastFourDigits: lastFour)
+        
+        // Then
+        XCTAssertTrue(fullPhone == "(312) 123-4567", "Phone number is \(fullPhone) it should be (\(areacode)) \(firstThree)-\(lastFour)")
     }
     
 }

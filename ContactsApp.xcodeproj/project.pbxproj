@@ -19,6 +19,8 @@
 		4C47C3E61F297A7500A92B24 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C47C3E51F297A7500A92B24 /* Contact.swift */; };
 		4C47C3EC1F297ED400A92B24 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C47C3E51F297A7500A92B24 /* Contact.swift */; };
 		4C47C3EE1F29873000A92B24 /* ContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C47C3ED1F29873000A92B24 /* ContactTableViewCell.swift */; };
+		4C47C3F01F2A058F00A92B24 /* ContactService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C47C3EF1F2A058F00A92B24 /* ContactService.swift */; };
+		4C47C3F11F2A06DE00A92B24 /* ContactService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C47C3EF1F2A058F00A92B24 /* ContactService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +58,7 @@
 		4C47C3E01F29796800A92B24 /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		4C47C3E51F297A7500A92B24 /* Contact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		4C47C3ED1F29873000A92B24 /* ContactTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactTableViewCell.swift; sourceTree = "<group>"; };
+		4C47C3EF1F2A058F00A92B24 /* ContactService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				4C47C3E51F297A7500A92B24 /* Contact.swift */,
+				4C47C3EF1F2A058F00A92B24 /* ContactService.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -302,6 +306,7 @@
 				4C47C3EE1F29873000A92B24 /* ContactTableViewCell.swift in Sources */,
 				4C47C3B51F294EF800A92B24 /* EditContactViewController.swift in Sources */,
 				4C47C3E11F29796800A92B24 /* ContactViewController.swift in Sources */,
+				4C47C3F01F2A058F00A92B24 /* ContactService.swift in Sources */,
 				4C47C3E61F297A7500A92B24 /* Contact.swift in Sources */,
 				4C47C3B11F294EF800A92B24 /* AppDelegate.swift in Sources */,
 				4C47C3B31F294EF800A92B24 /* ContactsViewController.swift in Sources */,
@@ -314,6 +319,7 @@
 			files = (
 				4C47C3EC1F297ED400A92B24 /* Contact.swift in Sources */,
 				4C47C3C81F294EF800A92B24 /* ContactsAppTests.swift in Sources */,
+				4C47C3F11F2A06DE00A92B24 /* ContactService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

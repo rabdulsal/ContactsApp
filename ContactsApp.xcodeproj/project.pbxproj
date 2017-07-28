@@ -24,6 +24,7 @@
 		4C9765D61F2A7ACB00A1FBAB /* ContactDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C9765D41F2A7ACB00A1FBAB /* ContactDataModel.xcdatamodeld */; };
 		4C9766161F2A9D7300A1FBAB /* Contact+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9766141F2A9D7300A1FBAB /* Contact+CoreDataClass.swift */; };
 		4C9766171F2A9D7300A1FBAB /* Contact+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9766151F2A9D7300A1FBAB /* Contact+CoreDataProperties.swift */; };
+		4CA4CD421F2B8496001E0CDE /* ContactTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CD411F2B8496001E0CDE /* ContactTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,7 @@
 		4C9765D51F2A7ACB00A1FBAB /* ContactDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ContactDataModel.xcdatamodel; sourceTree = "<group>"; };
 		4C9766141F2A9D7300A1FBAB /* Contact+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Contact+CoreDataClass.swift"; sourceTree = "<group>"; };
 		4C9766151F2A9D7300A1FBAB /* Contact+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Contact+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		4CA4CD411F2B8496001E0CDE /* ContactTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,12 +96,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4C15DFEA1F2B05F200801176 /* Extensions */ = {
+		4C15DFEA1F2B05F200801176 /* Extensions / Utilities / Sub-classes */ = {
 			isa = PBXGroup;
 			children = (
 				4C15DFEB1F2B062800801176 /* UIButton+ContactApp.swift */,
+				4CA4CD411F2B8496001E0CDE /* ContactTextField.swift */,
 			);
-			name = Extensions;
+			name = "Extensions / Utilities / Sub-classes";
 			sourceTree = "<group>";
 		};
 		4C47C3A41F294EF800A92B24 = {
@@ -126,7 +129,7 @@
 		4C47C3AF1F294EF800A92B24 /* ContactsApp */ = {
 			isa = PBXGroup;
 			children = (
-				4C15DFEA1F2B05F200801176 /* Extensions */,
+				4C15DFEA1F2B05F200801176 /* Extensions / Utilities / Sub-classes */,
 				4C9765D31F2A7A9000A1FBAB /* Resources */,
 				4C47C3E21F297A3900A92B24 /* Models */,
 				4C47C3E31F297A4600A92B24 /* Views */,
@@ -349,6 +352,7 @@
 				4C15DFEC1F2B062800801176 /* UIButton+ContactApp.swift in Sources */,
 				4C47C3B11F294EF800A92B24 /* AppDelegate.swift in Sources */,
 				4C9766161F2A9D7300A1FBAB /* Contact+CoreDataClass.swift in Sources */,
+				4CA4CD421F2B8496001E0CDE /* ContactTextField.swift in Sources */,
 				4C47C3B31F294EF800A92B24 /* ContactsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

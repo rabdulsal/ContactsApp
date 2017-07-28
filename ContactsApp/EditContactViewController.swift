@@ -45,6 +45,7 @@ class EditContactViewController: UIViewController {
     var contactDelegate: ContactCreatable?
     var editingContact: Contact?
     var editingContactIdx: Int?
+    var activeTextfield: UITextField?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,6 +54,31 @@ class EditContactViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         verifyFields()
+    }
+    
+    override func doneButtonPressed(_ sender: Any) {
+        //        if let textField = birthYearField {
+        //            // TODO: Refactor to method
+        //            let nextTag: NSInteger = textField.tag + 1;
+        //            // Try to find next responder
+        //            if let nextResponder: UIResponder = textField.superview!.viewWithTag(nextTag) {//could not find an overload for '!=' that accepts the supplied arguments
+        //
+        //                // Found next responder, so set it.
+        //                nextResponder.becomeFirstResponder()
+        //            } else {
+        //                // Not found, so remove keyboard.
+        //                textField.resignFirstResponder()
+        //            }
+        //        }
+        advanceTextfields()
+    }
+    
+    override func dateChanged(_ datePicker: UIDatePicker) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yyyy"
+        activeTextfield = birthYearField
+        self.birthYearField.text = formatter.string(from: datePicker.date)
+        print("Date:",birthYearField.text!)
     }
     
     // MARK: IBActions
@@ -97,13 +123,24 @@ extension EditContactViewController : UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         var maxAllowableCharacters: Int
+        var autoAdvance: Bool
         
         switch TextfieldType(rawValue: textField.tag)! {
-        case .areacode:   maxAllowableCharacters = 3
-        case .firstThree: maxAllowableCharacters = 3
-        case .lastFour:   maxAllowableCharacters = 4
-        case .zipcode:    maxAllowableCharacters = 5
-        default:          maxAllowableCharacters = 100
+        case .areacode:
+            maxAllowableCharacters = 3
+            autoAdvance = true
+        case .firstThree:
+            maxAllowableCharacters = 3
+            autoAdvance = true
+        case .lastFour:
+            maxAllowableCharacters = 4
+            autoAdvance = true
+        case .zipcode:
+            maxAllowableCharacters = 5
+            autoAdvance = false
+        default:
+            maxAllowableCharacters = 100
+            autoAdvance = false
         }
         
         if let text = textField.text {
@@ -113,12 +150,33 @@ extension EditContactViewController : UITextFieldDelegate {
             
             let textLength = text.characters.count + string.characters.count - range.length
             if textLength > maxAllowableCharacters {
+                if autoAdvance { advanceTextfields() }
                 return false
             } else {
+                textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
                 return true
             }
         }
         return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        self.activeTextfield = textField
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+//        let nextTag: NSInteger = activeTextfield!.tag + 1;
+//        // Try to find next responder
+//        if let nextResponder: UIResponder = textField.superview!.viewWithTag(nextTag) {
+//            
+//            // Found next responder, so set it.
+//            nextResponder.becomeFirstResponder()
+//        } else {
+//            // Not found, so remove keyboard.
+//            textField.resignFirstResponder()
+//        }
+        advanceTextfields()
+        return false; // We do not want UITextField to insert line-breaks.
     }
 }
 
@@ -130,20 +188,28 @@ fileprivate extension EditContactViewController {
         initializeTextFieldInputView()
         firstNameField.tag = TextfieldType.firstName.rawValue
         firstNameField.delegate = self
+        firstNameField.inputAccessoryView = makeDoneButtonToolBar()
         lastNameField.tag = TextfieldType.lastName.rawValue
         lastNameField.delegate = self
+        lastNameField.inputAccessoryView = makeDoneButtonToolBar()
+        birthYearField.tag = TextfieldType.birthday.rawValue
+        birthYearField.inputAccessoryView = makeDoneButtonToolBar()
         areacodeField.tag = TextfieldType.areacode.rawValue
         areacodeField.keyboardType = .phonePad
         areacodeField.delegate = self
+        areacodeField.inputAccessoryView = makeDoneButtonToolBar()
         threeDigitField.tag = TextfieldType.firstThree.rawValue
         threeDigitField.delegate = self
         threeDigitField.keyboardType = .phonePad
+        threeDigitField.inputAccessoryView = makeDoneButtonToolBar()
         fourDigitField.tag = TextfieldType.lastFour.rawValue
         fourDigitField.delegate = self
+        fourDigitField.inputAccessoryView = makeDoneButtonToolBar()
         fourDigitField.keyboardType = .phonePad
         zipcodeField.tag = TextfieldType.zipcode.rawValue
         zipcodeField.keyboardType = .phonePad
         zipcodeField.delegate = self
+        zipcodeField.inputAccessoryView = makeDoneButtonToolBar()
     }
     
     func decorateTextfields(with contact: Contact) {
@@ -164,37 +230,47 @@ fileprivate extension EditContactViewController {
     
     func initializeTextFieldInputView() {
         // Add date picker
-        let datePicker = UIDatePicker()
-        var components = DateComponents()
-        components.year = -100
-        let minDate = Calendar.current.date(byAdding: components, to: Date())
+//        let datePicker = UIDatePicker()
+//        var components = DateComponents()
+//        components.year = -100
+//        let minDate = Calendar.current.date(byAdding: components, to: Date())
+//        
+//        components.year = -18
+//        let maxDate = Calendar.current.date(byAdding: components, to: Date())
+//        
+//        datePicker.minimumDate = minDate
+//        datePicker.maximumDate = maxDate
+//        datePicker.datePickerMode = .date
+//        datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
+        self.birthYearField.inputView = makeDatePickerView()
         
-        components.year = -18
-        let maxDate = Calendar.current.date(byAdding: components, to: Date())
-        
-        datePicker.minimumDate = minDate
-        datePicker.maximumDate = maxDate
-        datePicker.datePickerMode = .date
-        datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
-        self.birthYearField.inputView = datePicker
-        
-        // Add toolbar with done button on the right
-        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 50))
-        let flexibleSeparator = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed(_:)))
-        toolbar.items = [flexibleSeparator, doneButton]
-        self.birthYearField.inputAccessoryView = toolbar
+        // TODO: Refactor
+//        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 50))
+//        let flexibleSeparator = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+//        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed(_:)))
+//        toolbar.items = [flexibleSeparator, doneButton]
+//        self.birthYearField.inputAccessoryView = toolbar
     }
     
-    @objc func dateChanged(_ datePicker: UIDatePicker) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/yyyy"
-        self.birthYearField.text = formatter.string(from: datePicker.date)
-        print("Date:",birthYearField.text!)
+    
+    
+    @objc func textFieldDidChange(_ sender: Any) {
+        verifyFields()
     }
     
-    @objc func doneButtonPressed(_ sender: Any) {
-        self.birthYearField.resignFirstResponder()
+    
+    func advanceTextfields() {
+        let nextTag: NSInteger = activeTextfield!.tag + 1;
+        // Try to find next responder
+        if let nextResponder: UIResponder = activeTextfield!.superview!.viewWithTag(nextTag) {
+            
+            // Found next responder, so set it.
+            nextResponder.becomeFirstResponder()
+        } else {
+            // Not found, so remove keyboard.
+            activeTextfield!.resignFirstResponder()
+        }
+
     }
     
     func allFieldsComplete() -> Bool {

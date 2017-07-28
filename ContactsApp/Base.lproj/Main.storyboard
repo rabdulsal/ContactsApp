@@ -452,6 +452,7 @@
                     <connections>
                         <outlet property="birthdayLabel" destination="T00-NE-GJE" id="wqN-f9-HhO"/>
                         <outlet property="contactNameLabel" destination="G8f-Kw-3eH" id="hIW-0h-noj"/>
+                        <outlet property="imageView" destination="Bev-Rd-VPL" id="5Fl-gO-t5J"/>
                         <outlet property="phoneNumberLabel" destination="odQ-MV-PPW" id="hoG-Wg-sD8"/>
                         <outlet property="zipcodeLabel" destination="Lwx-Dy-VkF" id="eIa-5T-Psm"/>
                         <segue destination="Fyc-1v-eGD" kind="presentation" identifier="GoToEditContact" id="DHx-AU-fHj"/>

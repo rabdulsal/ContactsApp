@@ -15,6 +15,7 @@ class ContactViewController : UIViewController {
     @IBOutlet weak var birthdayLabel: UILabel!
     @IBOutlet weak var phoneNumberLabel: UILabel!
     @IBOutlet weak var zipcodeLabel: UILabel!
+    @IBOutlet weak var imageView: UIImageView!
     
     var contact: Contact!
     var contactDelegate: ContactCreatable?
@@ -60,5 +61,8 @@ fileprivate extension ContactViewController {
         birthdayLabel.text      = contact.birthday
         phoneNumberLabel.text   = contact.phone
         zipcodeLabel.text       = contact.zipcode
+        if let iData = contact.imageData {
+            imageView.image = UIImage(data: iData)
+        }
     }
 }

@@ -21,5 +21,6 @@ extension Contact {
     @NSManaged public var birthday: String?
     @NSManaged public var phone: String?
     @NSManaged public var zipcode: String?
+    @NSManaged public var imageData: Data?
 
 }

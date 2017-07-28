@@ -17,5 +17,8 @@ class ContactTableViewCell : UITableViewCell {
     
     func configureContactCell(contact: Contact) {
         contactNameLabel.text = "\(contact.firstName!) \(contact.lastName!)"
+        if let iData = contact.imageData {
+            contactImageView.image = UIImage(data: iData)
+        }
     }
 }

@@ -21,12 +21,15 @@ enum ViewControllerIDs : String {
 
 class ContactsViewController: UIViewController {
     
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var contactsTableView: UITableView!
     @IBOutlet weak var noContactsView: UIView!
     
     var selectedContact: Contact?
     var allContacts = [Contact]()
     var contacts = [NSManagedObject]()
+    var searchController: UISearchController!
+    var filteredContacts = [Contact]()
     var coreContext = {
         return UIApplication.shared.delegate as? AppDelegate
     }
@@ -63,8 +66,6 @@ class ContactsViewController: UIViewController {
     @IBAction func pressedAddButton(_ sender: Any) {
         performSegue(withIdentifier: SegueIDs.editContact.rawValue, sender: nil)
     }
-    
-
 }
 
 extension ContactsViewController : UITableViewDelegate {
@@ -89,15 +90,27 @@ extension ContactsViewController : UITableViewDelegate {
 
 extension ContactsViewController : UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return allContacts.count
+        return searchInProgress() ? filteredContacts.count : allContacts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let contact = allContacts[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "ContactCellID") as! ContactTableViewCell
-        cell.configureContactCell(contact: contact)
+        
+        if searchInProgress() {
+            let contact = filteredContacts[indexPath.row]
+            cell.configureContactCell(contact: contact)
+        } else {
+            let contact = allContacts[indexPath.row]
+            cell.configureContactCell(contact: contact)
+        }
         return cell
+    }
+}
+
+extension ContactsViewController : UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        filterContents(of: searchController.searchBar.text!)
     }
 }
 
@@ -120,6 +133,13 @@ fileprivate extension ContactsViewController {
         contactsTableView.delegate = self
         contactsTableView.dataSource = self
         noContactsView.isHidden = false
+        
+        // SearchController
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        definesPresentationContext = true
+        contactsTableView.tableHeaderView = self.searchController.searchBar
     }
     
     func getData() {
@@ -132,6 +152,15 @@ fileprivate extension ContactsViewController {
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
+    }
+    
+    func filterContents(of searchText: String) {
+        self.filteredContacts = self.allContacts.filter { $0.firstName!.lowercased().contains(searchText.lowercased()) }
+        contactsTableView.reloadData()
+    }
+    
+    func searchInProgress() -> Bool {
+        return searchController.isActive && searchController.searchBar.text?.isEmpty == false
     }
 }
 

@@ -65,8 +65,7 @@ class EditContactViewController: UIViewController {
             cameraTriggerButton.setTitle("Add Photo", for: .normal)
             imageView.backgroundColor = UIColor.lightGray
         } else {
-            cameraTriggerButton.setTitle("", for: .normal)
-            imageView.backgroundColor = UIColor.white
+            setImageViewEditStyle()
         }
     }
     
@@ -194,8 +193,7 @@ extension EditContactViewController : UIImagePickerControllerDelegate, UINavigat
         imageData = UIImageJPEGRepresentation(chosenImage, 0.0)
 //        selectedPhoto = chosenImage
 //        updatePhotoContainerView()
-        cameraTriggerButton.setTitle("", for: .normal)
-        imageView.backgroundColor = UIColor.white
+        setImageViewEditStyle()
         picker.dismiss(animated: true, completion: nil)
     }
     
@@ -251,14 +249,13 @@ fileprivate extension EditContactViewController {
         if let iData = contact.imageData {
             imageView.image = UIImage(data: iData)
         }
-        //birthMonthField: ContactTextField!
-       // birthDateField: ContactTextField!
-        //
-        
-        
-//        areacodeField.text  = contact.areacode
-//        threeDigitField: ContactTextField!
-//        fourDigitField: ContactTextField!
+        (areacodeField.text!, threeDigitField.text!, fourDigitField.text!) = ContactService.deconstructPhoneNumber(with: contact.phone!)
+    }
+    
+    func setImageViewEditStyle() {
+        cameraTriggerButton.setTitle("Edit", for: .normal)
+        cameraTriggerButton.tintColor = UIColor.white
+        imageView.backgroundColor = UIColor.white
     }
     
     func initializeTextFieldInputView() {

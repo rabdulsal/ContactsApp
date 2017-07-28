@@ -9,10 +9,7 @@
 import UIKit
 import CoreData
 
-enum EditUserContext : Int {
-    case newUser = 0
-    case existingUser
-}
+
 
 protocol ContactCreatable {
     func didSuccessfullyCreateContact(contact: Contact)
@@ -21,16 +18,21 @@ protocol ContactCreatable {
 
 class EditContactViewController: UIViewController {
     
+    enum TextfieldType : Int {
+        case firstName = 0
+        case lastName
+        case birthday
+        case areacode
+        case firstThree
+        case lastFour
+        case zipcode
+    }
     // For creating new accounts and editing existing accounts
     
     // Name & zip fields
     @IBOutlet weak var firstNameField: UITextField!
     @IBOutlet weak var lastNameField: UITextField!
     @IBOutlet weak var zipcodeField: UITextField!
-    
-    // Birthday fields
-    @IBOutlet weak var birthMonthField: UITextField!
-    @IBOutlet weak var birthDateField: UITextField!
     @IBOutlet weak var birthYearField: UITextField!
     
     // Phone number fields
@@ -38,6 +40,7 @@ class EditContactViewController: UIViewController {
     @IBOutlet weak var threeDigitField: UITextField!
     @IBOutlet weak var fourDigitField: UITextField!
     
+    @IBOutlet weak var updateContactButton: UpdateContactButton!
     
     var contactDelegate: ContactCreatable?
     var editingContact: Contact?
@@ -47,10 +50,9 @@ class EditContactViewController: UIViewController {
         super.viewDidLoad()
         setup()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    override func viewWillAppear(_ animated: Bool) {
+        verifyFields()
     }
     
     // MARK: IBActions
@@ -66,7 +68,8 @@ class EditContactViewController: UIViewController {
         guard
             let firstName = firstNameField.text,
             let lastName = lastNameField.text,
-            let zipcode = zipcodeField.text else
+            let zipcode = zipcodeField.text,
+            let birthday = birthYearField.text else
         {
             return
         }
@@ -79,17 +82,8 @@ class EditContactViewController: UIViewController {
             return
         }
         
-        guard
-            let birthMo = birthMonthField.text,
-            let birthdate = birthDateField.text,
-            let birthYear = birthYearField.text else
-        {
-            return
-        }
-        
         
         let phone = ContactService.makePhoneNumber(with: areacode, firstThreeDigits: threeDigit, lastFourDigits: fourDigit)
-        let birthday = ContactService.makeBirthDate(with: birthMo, birthDay: birthdate, birthYear: birthYear)
         //let contact = Contact(firstName: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
         if let _ = editingContact {
             updateContact(with: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
@@ -97,8 +91,35 @@ class EditContactViewController: UIViewController {
             saveContact(with: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
         }
     }
-    
-    
+}
+
+extension EditContactViewController : UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        var maxAllowableCharacters: Int
+        
+        switch TextfieldType(rawValue: textField.tag)! {
+        case .areacode:   maxAllowableCharacters = 3
+        case .firstThree: maxAllowableCharacters = 3
+        case .lastFour:   maxAllowableCharacters = 4
+        case .zipcode:    maxAllowableCharacters = 5
+        default:          maxAllowableCharacters = 100
+        }
+        
+        if let text = textField.text {
+            if range.length + range.location > text.characters.count {
+                return false
+            }
+            
+            let textLength = text.characters.count + string.characters.count - range.length
+            if textLength > maxAllowableCharacters {
+                return false
+            } else {
+                return true
+            }
+        }
+        return true
+    }
 }
 
 fileprivate extension EditContactViewController {
@@ -106,6 +127,23 @@ fileprivate extension EditContactViewController {
         if let contact = editingContact {
             decorateTextfields(with: contact)
         }
+        initializeTextFieldInputView()
+        firstNameField.tag = TextfieldType.firstName.rawValue
+        firstNameField.delegate = self
+        lastNameField.tag = TextfieldType.lastName.rawValue
+        lastNameField.delegate = self
+        areacodeField.tag = TextfieldType.areacode.rawValue
+        areacodeField.keyboardType = .phonePad
+        areacodeField.delegate = self
+        threeDigitField.tag = TextfieldType.firstThree.rawValue
+        threeDigitField.delegate = self
+        threeDigitField.keyboardType = .phonePad
+        fourDigitField.tag = TextfieldType.lastFour.rawValue
+        fourDigitField.delegate = self
+        fourDigitField.keyboardType = .phonePad
+        zipcodeField.tag = TextfieldType.zipcode.rawValue
+        zipcodeField.keyboardType = .phonePad
+        zipcodeField.delegate = self
     }
     
     func decorateTextfields(with contact: Contact) {
@@ -119,10 +157,62 @@ fileprivate extension EditContactViewController {
         //birthYearField: UITextField!
         
         
-        //areacodeField.text  = contact.areacode
-        //threeDigitField: UITextField!
-        //fourDigitField: UITextField!
+//        areacodeField.text  = contact.areacode
+//        threeDigitField: UITextField!
+//        fourDigitField: UITextField!
     }
+    
+    func initializeTextFieldInputView() {
+        // Add date picker
+        let datePicker = UIDatePicker()
+        var components = DateComponents()
+        components.year = -100
+        let minDate = Calendar.current.date(byAdding: components, to: Date())
+        
+        components.year = -18
+        let maxDate = Calendar.current.date(byAdding: components, to: Date())
+        
+        datePicker.minimumDate = minDate
+        datePicker.maximumDate = maxDate
+        datePicker.datePickerMode = .date
+        datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
+        self.birthYearField.inputView = datePicker
+        
+        // Add toolbar with done button on the right
+        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 50))
+        let flexibleSeparator = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed(_:)))
+        toolbar.items = [flexibleSeparator, doneButton]
+        self.birthYearField.inputAccessoryView = toolbar
+    }
+    
+    @objc func dateChanged(_ datePicker: UIDatePicker) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yyyy"
+        self.birthYearField.text = formatter.string(from: datePicker.date)
+        print("Date:",birthYearField.text!)
+    }
+    
+    @objc func doneButtonPressed(_ sender: Any) {
+        self.birthYearField.resignFirstResponder()
+    }
+    
+    func allFieldsComplete() -> Bool {
+        return firstNameField.text?.isEmpty == false &&
+            lastNameField.text?.isEmpty == false &&
+            birthYearField.text?.isEmpty == false &&
+            areacodeField.text?.isEmpty == false &&
+            threeDigitField.text?.isEmpty == false &&
+            fourDigitField.text?.isEmpty == false &&
+            zipcodeField.text?.isEmpty == false
+        
+    }
+    
+    func verifyFields() {
+        updateContactButton.isEnabled = allFieldsComplete()
+    }
+    
+    // TODO: Move to ContactService
     
     func updateContact(with firstName: String, lastName: String, birthday: String, phone: String, zipcode: String) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }

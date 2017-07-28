@@ -260,7 +260,7 @@
 				TargetAttributes = {
 					4C47C3AC1F294EF800A92B24 = {
 						CreatedOnToolsVersion = 8.3;
-						DevelopmentTeam = XYNM954255;
+						DevelopmentTeam = 42B272KRRJ;
 						ProvisioningStyle = Automatic;
 					};
 					4C47C3C21F294EF800A92B24 = {
@@ -490,7 +490,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = XYNM954255;
+				DEVELOPMENT_TEAM = 42B272KRRJ;
 				INFOPLIST_FILE = ContactsApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rashad.ContactsApp;
@@ -503,7 +503,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = XYNM954255;
+				DEVELOPMENT_TEAM = 42B272KRRJ;
 				INFOPLIST_FILE = ContactsApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rashad.ContactsApp;

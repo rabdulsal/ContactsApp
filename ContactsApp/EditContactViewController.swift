@@ -8,8 +8,9 @@
 
 import UIKit
 import CoreData
-
-
+import MobileCoreServices
+import AVFoundation
+import Photos
 
 protocol ContactCreatable {
     func didSuccessfullyCreateContact(contact: Contact)
@@ -17,6 +18,8 @@ protocol ContactCreatable {
 }
 
 class EditContactViewController: UIViewController {
+    
+    static let formatter = DateFormatter()
     
     enum TextfieldType : Int {
         case firstName = 0
@@ -30,15 +33,15 @@ class EditContactViewController: UIViewController {
     // For creating new accounts and editing existing accounts
     
     // Name & zip fields
-    @IBOutlet weak var firstNameField: UITextField!
-    @IBOutlet weak var lastNameField: UITextField!
-    @IBOutlet weak var zipcodeField: UITextField!
-    @IBOutlet weak var birthYearField: UITextField!
+    @IBOutlet weak var firstNameField: ContactTextField!
+    @IBOutlet weak var lastNameField: ContactTextField!
+    @IBOutlet weak var zipcodeField: ContactTextField!
+    @IBOutlet weak var birthYearField: ContactTextField!
     
     // Phone number fields
-    @IBOutlet weak var areacodeField: UITextField!
-    @IBOutlet weak var threeDigitField: UITextField!
-    @IBOutlet weak var fourDigitField: UITextField!
+    @IBOutlet weak var areacodeField: ContactTextField!
+    @IBOutlet weak var threeDigitField: ContactTextField!
+    @IBOutlet weak var fourDigitField: ContactTextField!
     
     @IBOutlet weak var updateContactButton: UpdateContactButton!
     
@@ -57,28 +60,14 @@ class EditContactViewController: UIViewController {
     }
     
     override func doneButtonPressed(_ sender: Any) {
-        //        if let textField = birthYearField {
-        //            // TODO: Refactor to method
-        //            let nextTag: NSInteger = textField.tag + 1;
-        //            // Try to find next responder
-        //            if let nextResponder: UIResponder = textField.superview!.viewWithTag(nextTag) {//could not find an overload for '!=' that accepts the supplied arguments
-        //
-        //                // Found next responder, so set it.
-        //                nextResponder.becomeFirstResponder()
-        //            } else {
-        //                // Not found, so remove keyboard.
-        //                textField.resignFirstResponder()
-        //            }
-        //        }
         advanceTextfields()
     }
     
     override func dateChanged(_ datePicker: UIDatePicker) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/yyyy"
+//        let formatter = DateFormatter()
+        EditContactViewController.formatter.dateFormat = "MM/dd/yyyy"
         activeTextfield = birthYearField
-        self.birthYearField.text = formatter.string(from: datePicker.date)
-        print("Date:",birthYearField.text!)
+        self.birthYearField.text = EditContactViewController.formatter.string(from: datePicker.date)
     }
     
     // MARK: IBActions
@@ -110,7 +99,6 @@ class EditContactViewController: UIViewController {
         
         
         let phone = ContactService.makePhoneNumber(with: areacode, firstThreeDigits: threeDigit, lastFourDigits: fourDigit)
-        //let contact = Contact(firstName: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
         if let _ = editingContact {
             updateContact(with: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
         } else {
@@ -122,25 +110,12 @@ class EditContactViewController: UIViewController {
 extension EditContactViewController : UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        var maxAllowableCharacters: Int
+        let tField = textField as! ContactTextField
         var autoAdvance: Bool
         
         switch TextfieldType(rawValue: textField.tag)! {
-        case .areacode:
-            maxAllowableCharacters = 3
-            autoAdvance = true
-        case .firstThree:
-            maxAllowableCharacters = 3
-            autoAdvance = true
-        case .lastFour:
-            maxAllowableCharacters = 4
-            autoAdvance = true
-        case .zipcode:
-            maxAllowableCharacters = 5
-            autoAdvance = false
-        default:
-            maxAllowableCharacters = 100
-            autoAdvance = false
+        case .areacode, .firstThree, .lastFour: autoAdvance = true
+        default: autoAdvance = false
         }
         
         if let text = textField.text {
@@ -149,7 +124,7 @@ extension EditContactViewController : UITextFieldDelegate {
             }
             
             let textLength = text.characters.count + string.characters.count - range.length
-            if textLength > maxAllowableCharacters {
+            if textLength > tField.maxAllowableCharacters {
                 if autoAdvance { advanceTextfields() }
                 return false
             } else {
@@ -165,17 +140,13 @@ extension EditContactViewController : UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-//        let nextTag: NSInteger = activeTextfield!.tag + 1;
-//        // Try to find next responder
-//        if let nextResponder: UIResponder = textField.superview!.viewWithTag(nextTag) {
-//            
-//            // Found next responder, so set it.
-//            nextResponder.becomeFirstResponder()
-//        } else {
-//            // Not found, so remove keyboard.
-//            textField.resignFirstResponder()
-//        }
-        advanceTextfields()
+        switch TextfieldType(rawValue: textField.tag)! {
+        case .zipcode:
+            
+            pressedUpdateContactButton(self)
+        default: advanceTextfields()
+            
+        }
         return false; // We do not want UITextField to insert line-breaks.
     }
 }
@@ -197,18 +168,23 @@ fileprivate extension EditContactViewController {
         areacodeField.tag = TextfieldType.areacode.rawValue
         areacodeField.keyboardType = .phonePad
         areacodeField.delegate = self
+        areacodeField.maxAllowableCharacters = 3
         areacodeField.inputAccessoryView = makeDoneButtonToolBar()
         threeDigitField.tag = TextfieldType.firstThree.rawValue
         threeDigitField.delegate = self
         threeDigitField.keyboardType = .phonePad
+        threeDigitField.maxAllowableCharacters = 3
         threeDigitField.inputAccessoryView = makeDoneButtonToolBar()
         fourDigitField.tag = TextfieldType.lastFour.rawValue
         fourDigitField.delegate = self
         fourDigitField.inputAccessoryView = makeDoneButtonToolBar()
         fourDigitField.keyboardType = .phonePad
+        fourDigitField.maxAllowableCharacters = 4
         zipcodeField.tag = TextfieldType.zipcode.rawValue
         zipcodeField.keyboardType = .phonePad
         zipcodeField.delegate = self
+        zipcodeField.returnKeyType = .done
+        zipcodeField.maxAllowableCharacters = 5
         zipcodeField.inputAccessoryView = makeDoneButtonToolBar()
     }
     
@@ -216,43 +192,21 @@ fileprivate extension EditContactViewController {
         firstNameField.text = contact.firstName
         lastNameField.text  = contact.lastName
         zipcodeField.text   = contact.zipcode
+        birthYearField.text = contact.birthday
         
-        
-        //birthMonthField: UITextField!
-       // birthDateField: UITextField!
-        //birthYearField: UITextField!
+        //birthMonthField: ContactTextField!
+       // birthDateField: ContactTextField!
+        //
         
         
 //        areacodeField.text  = contact.areacode
-//        threeDigitField: UITextField!
-//        fourDigitField: UITextField!
+//        threeDigitField: ContactTextField!
+//        fourDigitField: ContactTextField!
     }
     
     func initializeTextFieldInputView() {
-        // Add date picker
-//        let datePicker = UIDatePicker()
-//        var components = DateComponents()
-//        components.year = -100
-//        let minDate = Calendar.current.date(byAdding: components, to: Date())
-//        
-//        components.year = -18
-//        let maxDate = Calendar.current.date(byAdding: components, to: Date())
-//        
-//        datePicker.minimumDate = minDate
-//        datePicker.maximumDate = maxDate
-//        datePicker.datePickerMode = .date
-//        datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
         self.birthYearField.inputView = makeDatePickerView()
-        
-        // TODO: Refactor
-//        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 50))
-//        let flexibleSeparator = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-//        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed(_:)))
-//        toolbar.items = [flexibleSeparator, doneButton]
-//        self.birthYearField.inputAccessoryView = toolbar
     }
-    
-    
     
     @objc func textFieldDidChange(_ sender: Any) {
         verifyFields()
@@ -277,10 +231,10 @@ fileprivate extension EditContactViewController {
         return firstNameField.text?.isEmpty == false &&
             lastNameField.text?.isEmpty == false &&
             birthYearField.text?.isEmpty == false &&
-            areacodeField.text?.isEmpty == false &&
-            threeDigitField.text?.isEmpty == false &&
-            fourDigitField.text?.isEmpty == false &&
-            zipcodeField.text?.isEmpty == false
+            areacodeField.isValidlyComplete &&
+            threeDigitField.isValidlyComplete &&
+            fourDigitField.isValidlyComplete &&
+            zipcodeField.isValidlyComplete
         
     }
     

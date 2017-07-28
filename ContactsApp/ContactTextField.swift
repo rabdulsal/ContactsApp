@@ -20,7 +20,16 @@ class ContactTextField : UITextField {
         
     }
     
+    var maxCharLimitReached: Bool {
+        if let text = self.text {
+            return text.characters.count >= maxAllowableCharacters
+        }
+        return false
+    }
     
+    var isValidlyComplete: Bool {
+        return self.text?.isEmpty == false && maxCharLimitReached
+    }
 }
 
 extension UIViewController {

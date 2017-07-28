@@ -18,6 +18,7 @@ class ContactViewController : UIViewController {
     
     var contact: Contact!
     var contactDelegate: ContactCreatable?
+    var contactIdx: Int!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +38,7 @@ class ContactViewController : UIViewController {
         let editContactVC = navVC.viewControllers.first as! EditContactViewController
         editContactVC.contactDelegate = self
         editContactVC.editingContact  = contact
+        editContactVC.editingContactIdx = contactIdx
     }
     
 }

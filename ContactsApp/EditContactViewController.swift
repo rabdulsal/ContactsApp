@@ -41,6 +41,7 @@ class EditContactViewController: UIViewController {
     
     var contactDelegate: ContactCreatable?
     var editingContact: Contact?
+    var editingContactIdx: Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,7 +91,11 @@ class EditContactViewController: UIViewController {
         let phone = ContactService.makePhoneNumber(with: areacode, firstThreeDigits: threeDigit, lastFourDigits: fourDigit)
         let birthday = ContactService.makeBirthDate(with: birthMo, birthDay: birthdate, birthYear: birthYear)
         //let contact = Contact(firstName: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
-        saveContact(with: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
+        if let _ = editingContact {
+            updateContact(with: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
+        } else {
+            saveContact(with: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
+        }
     }
     
     
@@ -119,38 +124,54 @@ fileprivate extension EditContactViewController {
         //fourDigitField: UITextField!
     }
     
+    func updateContact(with firstName: String, lastName: String, birthday: String, phone: String, zipcode: String) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        var contacts = [Contact]()
+        //let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Person")
+        
+        do {
+            contacts = try managedContext.fetch(Contact.fetchRequest())
+            // TODO: Make separate filter method
+            let contact = contacts.filter {
+                $0.firstName == self.editingContact!.firstName &&
+                $0.lastName == self.editingContact!.lastName &&
+                //$0.birthday == birthday &&
+                //$0.phone == phone &&
+                $0.zipcode == self.editingContact!.zipcode
+            }.first
+            if let c = contact {
+                // TODO: Createnew Save func from here
+                c.firstName = firstName
+                c.lastName = lastName
+                c.birthday = birthday
+                c.phone = phone
+                c.zipcode = zipcode
+                appDelegate.saveContext()
+                contactDelegate?.didSuccessfullyCreateContact(contact: c)
+                self.dismiss(animated: true)
+            }
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+    }
+    
     func saveContact(with firstName: String, lastName: String, birthday: String, phone: String, zipcode: String) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
         let managedContext = appDelegate.persistentContainer.viewContext
         
         let contact = Contact(context: managedContext)
+        // TODO: Create new save func from here
         contact.firstName = firstName
         contact.lastName = lastName
         contact.birthday = birthday
         contact.phone = phone
         contact.zipcode = zipcode
-        
-        //let entity = NSEntityDescription.entity(forEntityName: "Contact", in: managedContext)!
-        
-        //let contact = NSManagedObject(entity: entity, insertInto: managedContext)
-        
-        //contact.setValue(firstName, forKeyPath: "firstName")
-        //contact.setValue(lastName, forKeyPath: "lastName")
-        //contact.setValue(birthday, forKeyPath: "birthday")
-        //contact.setValue(phone, forKeyPath: "phone")
-        //contact.setValue(zipcode, forKeyPath: "zipcode")
         appDelegate.saveContext()
+        contactDelegate?.didSuccessfullyCreateContact(contact: contact)
         self.dismiss(animated: true)
-        
-        // OLD CODE
-        //do {
-        //    try managedContext.save()
-        //    contactDelegate?.didSuccessfullyCreateContact(contact: contact)
-        //    self.dismiss(animated: true)
-        //} catch let error as NSError {
-        //    print("Coould not save. \(error), \(error.userInfo)")
-        //}
     }
 }
 

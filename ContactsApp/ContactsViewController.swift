@@ -27,6 +27,9 @@ class ContactsViewController: UIViewController {
     var selectedContact: Contact?
     var allContacts = [Contact]()
     var contacts = [NSManagedObject]()
+    var coreContext = {
+        return UIApplication.shared.delegate as? AppDelegate
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,6 +72,19 @@ extension ContactsViewController : UITableViewDelegate {
         self.selectedContact = allContacts[indexPath.row]
         performSegue(withIdentifier: SegueIDs.contact.rawValue, sender: nil)
     }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        if editingStyle == .delete {
+            let contact = allContacts[indexPath.row]
+            managedContext.delete(contact)
+            appDelegate.saveContext()
+            getData()
+            contactsTableView.reloadData()
+        }
+    }
 }
 
 extension ContactsViewController : UITableViewDataSource {
@@ -87,9 +103,9 @@ extension ContactsViewController : UITableViewDataSource {
 
 extension ContactsViewController : ContactCreatable {
     func didSuccessfullyCreateContact(contact: Contact) {
-        selectedContact = contact
-        allContacts.append(selectedContact!)
+        //selectedContact = contact
         noContactsView.isHidden = true
+        getData()
         contactsTableView.reloadData()
     }
     
@@ -111,12 +127,8 @@ fileprivate extension ContactsViewController {
         
         let managedContext = appDelegate.persistentContainer.viewContext
         
-        //let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Person")
-        
         do {
             allContacts = try managedContext.fetch(Contact.fetchRequest())
-            // TODO: Transform contacts<Array, NSManagedObject> in to allContacts<Array, Contact>
-            //allContacts = ContactService.makeContact(from: contacts)
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }

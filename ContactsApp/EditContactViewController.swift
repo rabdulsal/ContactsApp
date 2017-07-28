@@ -44,11 +44,15 @@ class EditContactViewController: UIViewController {
     @IBOutlet weak var fourDigitField: ContactTextField!
     
     @IBOutlet weak var updateContactButton: UpdateContactButton!
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var cameraTriggerButton: UIButton!
     
     var contactDelegate: ContactCreatable?
     var editingContact: Contact?
     var editingContactIdx: Int?
     var activeTextfield: UITextField?
+    fileprivate let kMaxMomentImageSize = 340000.0
+    fileprivate var selectedPhoto: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +61,10 @@ class EditContactViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         verifyFields()
+        if imageView.image == nil {
+            cameraTriggerButton.setTitle("Add Photo", for: .normal)
+            imageView.backgroundColor = UIColor.lightGray
+        }
     }
     
     override func doneButtonPressed(_ sender: Any) {
@@ -105,7 +113,18 @@ class EditContactViewController: UIViewController {
             saveContact(with: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
         }
     }
+    
+    @IBAction func pressedCameraTriggerButton(_ sender: Any) {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            shootPhoto()
+        } else {
+            accessPhotos()
+        }
+    }
+    
 }
+
+// MARK: TextFieldDelegate 
 
 extension EditContactViewController : UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -151,6 +170,35 @@ extension EditContactViewController : UITextFieldDelegate {
     }
 }
 
+// MARK: ImagePickerDelegate
+
+extension EditContactViewController : UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
+//        let preparedImage = prepareImage(inputImage: image)
+//        var chosenImage = editingInfo[UIImagePickerControllerOriginalImage] as! UIImage
+//        imageView.contentMode = .scaleAspectFit
+//        imageView.image = chosenImage
+//        selectedPhoto = chosenImage
+//        updatePhotoContainerView()
+//        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = chosenImage
+//        selectedPhoto = chosenImage
+//        updatePhotoContainerView()
+        cameraTriggerButton.setTitle("", for: .normal)
+        imageView.backgroundColor = UIColor.white
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+}
+
 fileprivate extension EditContactViewController {
     func setup() {
         if let contact = editingContact {
@@ -187,6 +235,8 @@ fileprivate extension EditContactViewController {
         zipcodeField.maxAllowableCharacters = 5
         zipcodeField.inputAccessoryView = makeDoneButtonToolBar()
     }
+    
+    // MARK: TextField Stuff
     
     func decorateTextfields(with contact: Contact) {
         firstNameField.text = contact.firstName
@@ -240,6 +290,88 @@ fileprivate extension EditContactViewController {
     
     func verifyFields() {
         updateContactButton.isEnabled = allFieldsComplete()
+    }
+    
+    // MARK: Camera Stuff
+    func prepareImage(inputImage: UIImage) -> UIImage {
+        var outputImage = inputImage
+        // If the UIImage is larger than kMaxMomentImageSize, scale it down
+        let imageSize = UIImageJPEGRepresentation(inputImage, 0)!.count
+        var scale = 1.0
+        
+        if (Double(imageSize) > kMaxMomentImageSize) {
+            if let image = UIImage(data: UIImageJPEGRepresentation(inputImage, 0)!) {
+                scale = kMaxMomentImageSize / Double(imageSize)
+                let size = CGSize(width: image.size.width * CGFloat(scale), height: image.size.height * CGFloat(scale))
+                
+                UIGraphicsBeginImageContext(size)
+                image.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+                outputImage = UIGraphicsGetImageFromCurrentImageContext()!
+                UIGraphicsEndImageContext()
+            }
+        } else {
+            return outputImage
+        }
+        
+        return outputImage
+    }
+    
+    func updatePhotoContainerView() {
+        if let photo = selectedPhoto {
+            
+        } else {
+            
+        }
+    }
+    
+    func shootPhoto() {
+        let imagePicker           = UIImagePickerController()
+        imagePicker.delegate      = self
+        imagePicker.sourceType    = .camera
+        imagePicker.allowsEditing = false // Maybe turn to true if have time
+        imagePicker.modalPresentationStyle = .fullScreen
+        self.present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func accessPhotos() {
+        let imagePicker           = UIImagePickerController()
+        imagePicker.delegate      = self
+        imagePicker.sourceType    = .photoLibrary
+        imagePicker.allowsEditing = false
+        imagePicker.modalPresentationStyle = .popover
+        self.present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func checkAndDeterminePhotoAccessibility() {
+        let photoAuth = PHPhotoLibrary.authorizationStatus()
+        
+        switch photoAuth {
+            
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization({ (status:PHAuthorizationStatus) -> Void in
+                
+                if status == .authorized {
+                    // Go to Photos
+//                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+//                        self.openPhotoLibrary()
+//                    })
+                    
+                } else {
+                    // Show Denied Alert
+//                    self.showDeniedMediaInstructions("Photos")
+                }
+            })
+            
+        case .authorized:
+            accessPhotos()
+            
+        default:
+            showDeniedMediaInstructions("Photos")
+        }
+    }
+    
+    func showDeniedMediaInstructions(_ something: String) {
+        
     }
     
     // TODO: Move to ContactService

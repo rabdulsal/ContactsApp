@@ -20,6 +20,10 @@
 	<string>1</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Upload a photo from your contact from your phone</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Take a photo of your contact</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

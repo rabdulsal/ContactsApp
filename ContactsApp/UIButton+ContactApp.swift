@@ -19,7 +19,7 @@ class UpdateContactButton : UIButton {
     
     func setEnabledStyle() {
         titleLabel?.textColor = UIColor.white
-        backgroundColor = UIColor.green
+        backgroundColor = UIColor.fusionGreen()
     }
     
     func setDisabledStyle() {

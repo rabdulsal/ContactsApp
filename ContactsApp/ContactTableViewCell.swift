@@ -19,6 +19,7 @@ class ContactTableViewCell : UITableViewCell {
         contactNameLabel.text = "\(contact.firstName!) \(contact.lastName!)"
         if let iData = contact.imageData {
             contactImageView.image = UIImage(data: iData)
+            contactImageView.roundedCorners()
         }
     }
 }

@@ -19,42 +19,18 @@
                         <viewControllerLayoutGuide type="bottom" id="4ug-Mw-9AY"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="tsR-hK-woN">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Wqp-Ok-5xU">
-                                <rect key="frame" x="16" y="64" width="343" height="100"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bOA-IM-1A1" userLabel="No Contacts">
-                                        <rect key="frame" x="0.0" y="0.0" width="343" height="100"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You have no Contacts. Make one!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0N-3I-fAb">
-                                                <rect key="frame" x="22" y="38" width="299.5" height="24"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstItem="d0N-3I-fAb" firstAttribute="centerY" secondItem="bOA-IM-1A1" secondAttribute="centerY" id="hAw-HZ-9cX"/>
-                                            <constraint firstItem="d0N-3I-fAb" firstAttribute="centerX" secondItem="bOA-IM-1A1" secondAttribute="centerX" id="m50-gb-6f6"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="JVp-gU-pyt"/>
-                                </constraints>
-                            </stackView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="hiH-rx-pHb">
-                                <rect key="frame" x="0.0" y="172" width="375" height="495"/>
+                                <rect key="frame" x="0.0" y="100" width="375" height="503"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ContactCellID" rowHeight="60" id="ZEA-QE-hou" customClass="ContactTableViewCell" customModule="ContactsApp" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZEA-QE-hou" id="Bwf-BJ-JV6">
-                                            <rect key="frame" x="0.0" y="0.0" width="342" height="60"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="342" height="59.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aaP-Ap-cDE">
@@ -85,18 +61,38 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bOA-IM-1A1" userLabel="No Contacts">
+                                <rect key="frame" x="16" y="0.0" width="343" height="100"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You have no Contacts. Let's make some!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0N-3I-fAb">
+                                        <rect key="frame" x="0.0" y="26" width="343" height="48"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="d0N-3I-fAb" secondAttribute="trailing" id="14W-1j-tNg"/>
+                                    <constraint firstAttribute="height" constant="100" id="TK5-Eg-oSi"/>
+                                    <constraint firstItem="d0N-3I-fAb" firstAttribute="centerY" secondItem="bOA-IM-1A1" secondAttribute="centerY" id="hAw-HZ-9cX"/>
+                                    <constraint firstItem="d0N-3I-fAb" firstAttribute="centerX" secondItem="bOA-IM-1A1" secondAttribute="centerX" id="m50-gb-6f6"/>
+                                    <constraint firstItem="d0N-3I-fAb" firstAttribute="leading" secondItem="bOA-IM-1A1" secondAttribute="leading" id="zfM-1L-Vam"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="Wqp-Ok-5xU" firstAttribute="top" secondItem="Ia1-K6-d13" secondAttribute="bottom" id="1Dp-ME-beH"/>
-                            <constraint firstItem="hiH-rx-pHb" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leadingMargin" constant="-16" id="1EY-km-cGn"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Wqp-Ok-5xU" secondAttribute="trailing" id="4yK-ed-eh3"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="hiH-rx-pHb" secondAttribute="trailing" constant="-16" id="CqO-Td-BJW"/>
-                            <constraint firstItem="hiH-rx-pHb" firstAttribute="top" secondItem="Wqp-Ok-5xU" secondAttribute="bottom" constant="8" id="nlX-Qw-eyU"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="Wqp-Ok-5xU" secondAttribute="leading" id="wFV-a8-WnZ"/>
+                            <constraint firstItem="hiH-rx-pHb" firstAttribute="top" secondItem="bOA-IM-1A1" secondAttribute="bottom" id="BAX-82-XGi"/>
+                            <constraint firstItem="hiH-rx-pHb" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="P63-Fl-NiC"/>
+                            <constraint firstItem="bOA-IM-1A1" firstAttribute="top" secondItem="Ia1-K6-d13" secondAttribute="bottom" id="PAX-FK-tQq"/>
+                            <constraint firstAttribute="trailing" secondItem="hiH-rx-pHb" secondAttribute="trailing" id="T7M-mp-08A"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="bOA-IM-1A1" secondAttribute="trailing" id="gl3-sA-YCW"/>
+                            <constraint firstItem="bOA-IM-1A1" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leadingMargin" id="pIN-lX-Eb6"/>
                             <constraint firstItem="4ug-Mw-9AY" firstAttribute="top" secondItem="hiH-rx-pHb" secondAttribute="bottom" id="z8K-Wq-pup"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" title="Your Contacts" id="aXA-kq-Idn">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="24S-lr-9fx">
                             <connections>
@@ -106,7 +102,9 @@
                     </navigationItem>
                     <connections>
                         <outlet property="contactsTableView" destination="hiH-rx-pHb" id="hsf-HD-BYH"/>
+                        <outlet property="noContactsLabel" destination="d0N-3I-fAb" id="8NN-hx-caH"/>
                         <outlet property="noContactsView" destination="bOA-IM-1A1" id="hgh-U9-VBe"/>
+                        <outlet property="noContactsViewHeightConstraint" destination="TK5-Eg-oSi" id="qRn-FY-JvB"/>
                         <segue destination="QqQ-KJ-9x5" kind="show" identifier="GoToContact" id="lIT-Pz-0B9"/>
                         <segue destination="Fyc-1v-eGD" kind="presentation" identifier="GoToEditContact" id="6Ma-Y1-t95"/>
                     </connections>
@@ -467,6 +465,6 @@
         <image name="first" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="DHx-AU-fHj"/>
+        <segue reference="6Ma-Y1-t95"/>
     </inferredMetricsTieBreakers>
 </document>

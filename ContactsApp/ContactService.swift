@@ -19,7 +19,13 @@ class ContactService {
         case zipcode = "zipcode"
     }
     
-    static func makePhoneNumber(with areacode: String, firstThreeDigits: String, lastFourDigits: String) -> String {
+    static func makePhone(with areacode: String, firstThreeDigits: String, lastFourDigits: String) -> String {
+        
+        
+        return "\(areacode)\(firstThreeDigits)\(lastFourDigits)"
+    }
+    
+    static func makeFormattedPhoneNumber(with areacode: String, firstThreeDigits: String, lastFourDigits: String) -> String {
         
         return "(\(areacode)) \(firstThreeDigits)-\(lastFourDigits)"
     }

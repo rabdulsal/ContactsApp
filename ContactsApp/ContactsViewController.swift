@@ -21,10 +21,11 @@ enum ViewControllerIDs : String {
 
 class ContactsViewController: UIViewController {
     
-    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var contactsTableView: UITableView!
     @IBOutlet weak var noContactsView: UIView!
+    @IBOutlet weak var noContactsViewHeightConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var noContactsLabel: UILabel!
     var selectedContact: Contact?
     var allContacts = [Contact]()
     var contacts = [NSManagedObject]()
@@ -43,6 +44,7 @@ class ContactsViewController: UIViewController {
         super.viewWillAppear(animated)
         getData()
         contactsTableView.reloadData()
+        toggleNoContactsView()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -56,6 +58,7 @@ class ContactsViewController: UIViewController {
             contactVC.contact = selectedContact
         case .editContact:
             let navVC = segue.destination as! UINavigationController
+            navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
             let editContactVC = navVC.viewControllers.first as! EditContactViewController
             editContactVC.contactDelegate = self
         }
@@ -84,6 +87,7 @@ extension ContactsViewController : UITableViewDelegate {
             appDelegate.saveContext()
             getData()
             contactsTableView.reloadData()
+            toggleNoContactsView()
         }
     }
 }
@@ -116,10 +120,9 @@ extension ContactsViewController : UISearchResultsUpdating {
 
 extension ContactsViewController : ContactCreatable {
     func didSuccessfullyCreateContact(contact: Contact) {
-        //selectedContact = contact
-        noContactsView.isHidden = true
         getData()
         contactsTableView.reloadData()
+        toggleNoContactsView()
     }
     
     func didFailToCreateContact(error: NSError) {
@@ -130,16 +133,17 @@ extension ContactsViewController : ContactCreatable {
 fileprivate extension ContactsViewController {
     
     func setup() {
-        contactsTableView.delegate = self
-        contactsTableView.dataSource = self
-        noContactsView.isHidden = false
         
-        // SearchController
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
+        contactsTableView.delegate = self
+        contactsTableView.dataSource = self
         contactsTableView.tableHeaderView = self.searchController.searchBar
+        contactsTableView.tableFooterView = UIView()
     }
     
     func getData() {
@@ -161,6 +165,22 @@ fileprivate extension ContactsViewController {
     
     func searchInProgress() -> Bool {
         return searchController.isActive && searchController.searchBar.text?.isEmpty == false
+    }
+    
+    func toggleNoContactsView() {
+        allContacts.isEmpty ? showNoContactsView() : hideNoContactsView()
+    }
+    
+    func showNoContactsView() {
+        noContactsView.isHidden = false
+        noContactsViewHeightConstraint.constant = 100
+        noContactsLabel.isHidden = false
+    }
+    
+    func hideNoContactsView() {
+//        noContactsView.isHidden = true
+        noContactsViewHeightConstraint.constant = 0
+        noContactsLabel.isHidden = true
     }
 }
 

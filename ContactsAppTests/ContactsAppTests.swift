@@ -11,15 +11,15 @@ import XCTest
 
 class ContactsAppTests: XCTestCase {
     
-    let firstName   = "Bob"
-    let lastName    = "Loweth"
-    let birthMo     = "01"
+    let firstName   = "Max"
+    let lastName    = "Paltsev"
+    let birthMo     = "09"
     let birthDay    = "01"
-    let birthYr     = "1900"
-    let areacode    = "312"
-    let firstThree  = "123"
-    let lastFour    = "4567"
-    let zipcode     = "08003"
+    let birthYr     = "2013"
+    let areacode    = "888"
+    let firstThree  = "903"
+    let lastFour    = "0304"
+    let zipcode     = "76034"
     
     override func setUp() {
         super.setUp()
@@ -31,54 +31,24 @@ class ContactsAppTests: XCTestCase {
         super.tearDown()
     }
     
-    func makeContact() /*-> Contact */{
-        let birthday = "01/01/1940"
-        let phone = "(312) 123-4567"
-        
-//        return Contact(firstName: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode)
-    }
-    
-    func testContactConstructor() {
-        // Given
-//        let birthday = "01/01/1940"
-//        let phone = "(312) 123-4567"
-//        
-//        // When
-//        let contact = makeContact()
-//        
-//        // Then
-//        XCTAssertTrue(contact.firstName == firstName, "FirstName should be \(firstName)")
-//        XCTAssertTrue(contact.lastName == lastName, "LastName should be \(lastName)")
-//        XCTAssertTrue(contact.birthday == birthday, "Birthday should be \(birthday)")
-//        XCTAssertTrue(contact.phone == phone, "Phone should be \(phone)")
-//        XCTAssertTrue(contact.zipcode == zipcode, "Zipcode should be \(zipcode)")
-    }
-    
-    func testContactDisplayFullName() {
-        let contact = makeContact()
-        let fullName = "Bob Loweth"
-        
-//        XCTAssertTrue(contact.fullName == fullName, "FullName is \(contact.fullName), it should be \(fullName)")
-    }
-    
     func testContactServiceBirthdayConstructor() {
-        // Given
-        
+        // Given Scaffold
         
         // When
         let fullBirthDay = ContactService.makeBirthDate(with: birthMo, birthDay: birthDay, birthYear: birthYr)
         
         // Then
-        XCTAssertTrue(fullBirthDay == "01/01/1900", "Birthday is \(fullBirthDay) it should be \(birthMo)/\(birthDay)/\(birthYr)")
+        XCTAssertTrue(fullBirthDay == "09/01/2013", "Birthday is \(fullBirthDay) it should be \(birthMo)/\(birthDay)/\(birthYr)")
     }
     
-    func testContactServicePhoneNumberConstructor() {
+    func testContactServiceFormattedPhoneNumberConstructor() {
+        // Given Scaffold
         
         // When
-        let fullPhone = ContactService.makePhoneNumber(with: areacode, firstThreeDigits: firstThree, lastFourDigits: lastFour)
+        let fullPhone = ContactService.makeFormattedPhoneNumber(with: areacode, firstThreeDigits: firstThree, lastFourDigits: lastFour)
         
         // Then
-        XCTAssertTrue(fullPhone == "(312) 123-4567", "Phone number is \(fullPhone) it should be (\(areacode)) \(firstThree)-\(lastFour)")
+        XCTAssertTrue(fullPhone == "(888) 903-0304", "Phone number is \(fullPhone) it should be (\(areacode)) \(firstThree)-\(lastFour)")
     }
     
     func testContactServicePhoneDeconstructor() {

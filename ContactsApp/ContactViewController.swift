@@ -15,7 +15,12 @@ class ContactViewController : UIViewController {
     @IBOutlet weak var birthdayLabel: UILabel!
     @IBOutlet weak var phoneNumberLabel: UILabel!
     @IBOutlet weak var zipcodeLabel: UILabel!
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var imageView: UIImageView! {
+        didSet {
+            self.imageView.layer.cornerRadius = self.imageView.frame.size.width / 2
+            self.imageView.clipsToBounds = true
+        }
+    }
     
     var contact: Contact!
     var contactDelegate: ContactCreatable?
@@ -23,6 +28,7 @@ class ContactViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupTapGestureRecognizer()
         decorateView(with: self.contact)
         
     }
@@ -36,6 +42,7 @@ class ContactViewController : UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         let navVC = segue.destination as! UINavigationController
+        navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
         let editContactVC = navVC.viewControllers.first as! EditContactViewController
         editContactVC.contactDelegate = self
         editContactVC.editingContact  = contact
@@ -55,14 +62,36 @@ extension ContactViewController : ContactCreatable {
     }
 }
 
+extension ContactViewController : UIGestureRecognizerDelegate {
+    
+}
+
 fileprivate extension ContactViewController {
     func decorateView(with contact: Contact) {
         contactNameLabel.text   = "\(contact.firstName!) \(contact.lastName!)"
         birthdayLabel.text      = contact.birthday
-        phoneNumberLabel.text   = contact.phone
+        phoneNumberLabel.text   = contact.formattedPhone
+        phoneNumberLabel.textColor = UIColor.fusionGreen()
         zipcodeLabel.text       = contact.zipcode
         if let iData = contact.imageData {
             imageView.image = UIImage(data: iData)
+        }
+        self.contact = contact
+    }
+    
+    func setupTapGestureRecognizer() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.makePhoneLabelCallable))
+        tap.delegate = self
+        tap.numberOfTapsRequired = 1
+        phoneNumberLabel.isUserInteractionEnabled = true
+        phoneNumberLabel.addGestureRecognizer(tap)
+    }
+    
+    @objc func makePhoneLabelCallable() {
+        if let url = URL(string: "telprompt:\(self.contact.phone!)") {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
         }
     }
 }

@@ -30,7 +30,6 @@ class EditContactViewController: UIViewController {
         case lastFour
         case zipcode
     }
-    // For creating new accounts and editing existing accounts
     
     // Name & zip fields
     @IBOutlet weak var firstNameField: ContactTextField!
@@ -64,6 +63,7 @@ class EditContactViewController: UIViewController {
         if imageView.image == nil {
             cameraTriggerButton.setTitle("Add Photo", for: .normal)
             imageView.backgroundColor = UIColor.lightGray
+            imageView.boxedCorners()
         } else {
             setImageViewEditStyle()
         }
@@ -74,7 +74,6 @@ class EditContactViewController: UIViewController {
     }
     
     override func dateChanged(_ datePicker: UIDatePicker) {
-//        let formatter = DateFormatter()
         EditContactViewController.formatter.dateFormat = "MM/dd/yyyy"
         activeTextfield = birthYearField
         self.birthYearField.text = EditContactViewController.formatter.string(from: datePicker.date)
@@ -88,7 +87,6 @@ class EditContactViewController: UIViewController {
     }
     
     @IBAction func pressedUpdateContactButton(_ sender: Any) {
-        // Run UpdateContactService to store / update Core Data
         
         guard
             let firstName = firstNameField.text,
@@ -108,11 +106,12 @@ class EditContactViewController: UIViewController {
         }
         
         
-        let phone = ContactService.makePhoneNumber(with: areacode, firstThreeDigits: threeDigit, lastFourDigits: fourDigit)
+        let formattedPhone = ContactService.makeFormattedPhoneNumber(with: areacode, firstThreeDigits: threeDigit, lastFourDigits: fourDigit)
+        let unformattedPhone = ContactService.makePhone(with: areacode, firstThreeDigits: threeDigit, lastFourDigits: fourDigit)
         if let _ = editingContact {
-            updateContact(with: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode, imageData: self.imageData)
+            updateContact(with: firstName, lastName: lastName, birthday: birthday, phone: unformattedPhone, formattedPhone: formattedPhone, zipcode: zipcode, imageData: self.imageData)
         } else {
-            saveContact(with: firstName, lastName: lastName, birthday: birthday, phone: phone, zipcode: zipcode, imageData: self.imageData)
+            saveContact(with: firstName, lastName: lastName, birthday: birthday, phone: unformattedPhone, formattedPhone: formattedPhone, zipcode: zipcode, imageData: self.imageData)
         }
     }
     
@@ -168,22 +167,13 @@ extension EditContactViewController : UITextFieldDelegate {
         default: advanceTextfields()
             
         }
-        return false; // We do not want UITextField to insert line-breaks.
+        return false
     }
 }
 
 // MARK: ImagePickerDelegate
 
 extension EditContactViewController : UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
-//        let preparedImage = prepareImage(inputImage: image)
-//        var chosenImage = editingInfo[UIImagePickerControllerOriginalImage] as! UIImage
-//        imageView.contentMode = .scaleAspectFit
-//        imageView.image = chosenImage
-//        selectedPhoto = chosenImage
-//        updatePhotoContainerView()
-//        picker.dismiss(animated: true, completion: nil)
-    }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         var chosenImage = UIImage()
@@ -191,8 +181,6 @@ extension EditContactViewController : UIImagePickerControllerDelegate, UINavigat
         imageView.contentMode = .scaleAspectFit
         imageView.image = chosenImage
         imageData = UIImageJPEGRepresentation(chosenImage, 0.0)
-//        selectedPhoto = chosenImage
-//        updatePhotoContainerView()
         setImageViewEditStyle()
         picker.dismiss(animated: true, completion: nil)
     }
@@ -256,6 +244,7 @@ fileprivate extension EditContactViewController {
         cameraTriggerButton.setTitle("Edit", for: .normal)
         cameraTriggerButton.tintColor = UIColor.white
         imageView.backgroundColor = UIColor.white
+        imageView.roundedCorners()
     }
     
     func initializeTextFieldInputView() {
@@ -268,14 +257,10 @@ fileprivate extension EditContactViewController {
     
     
     func advanceTextfields() {
-        let nextTag: NSInteger = activeTextfield!.tag + 1;
-        // Try to find next responder
+        let nextTag: NSInteger = activeTextfield!.tag + 1
         if let nextResponder: UIResponder = activeTextfield!.superview!.viewWithTag(nextTag) {
-            
-            // Found next responder, so set it.
             nextResponder.becomeFirstResponder()
         } else {
-            // Not found, so remove keyboard.
             activeTextfield!.resignFirstResponder()
         }
 
@@ -338,46 +323,13 @@ fileprivate extension EditContactViewController {
         self.present(imagePicker, animated: true, completion: nil)
     }
     
-    func checkAndDeterminePhotoAccessibility() {
-        let photoAuth = PHPhotoLibrary.authorizationStatus()
-        
-        switch photoAuth {
-            
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization({ (status:PHAuthorizationStatus) -> Void in
-                
-                if status == .authorized {
-                    // Go to Photos
-//                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-//                        self.openPhotoLibrary()
-//                    })
-                    
-                } else {
-                    // Show Denied Alert
-//                    self.showDeniedMediaInstructions("Photos")
-                }
-            })
-            
-        case .authorized:
-            accessPhotos()
-            
-        default:
-            showDeniedMediaInstructions("Photos")
-        }
-    }
-    
-    func showDeniedMediaInstructions(_ something: String) {
-        
-    }
-    
     // TODO: Move to ContactService
     
-    func updateContact(with firstName: String, lastName: String, birthday: String, phone: String, zipcode: String, imageData: Data?=nil) {
+    func updateContact(with firstName: String, lastName: String, birthday: String, phone: String, formattedPhone: String, zipcode: String, imageData: Data?=nil) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
         let managedContext = appDelegate.persistentContainer.viewContext
         var contacts = [Contact]()
-        //let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Person")
         
         do {
             contacts = try managedContext.fetch(Contact.fetchRequest())
@@ -385,8 +337,8 @@ fileprivate extension EditContactViewController {
             let contact = contacts.filter {
                 $0.firstName == self.editingContact!.firstName &&
                 $0.lastName == self.editingContact!.lastName &&
-                //$0.birthday == birthday &&
-                //$0.phone == phone &&
+                $0.birthday == self.editingContact!.birthday &&
+                $0.phone == self.editingContact!.phone &&
                 $0.zipcode == self.editingContact!.zipcode
             }.first
             if let c = contact {
@@ -396,6 +348,7 @@ fileprivate extension EditContactViewController {
                 c.birthday = birthday
                 c.phone = phone
                 c.zipcode = zipcode
+                c.formattedPhone = formattedPhone
                 if let iData = imageData {
                     c.imageData = iData
                 }
@@ -408,7 +361,7 @@ fileprivate extension EditContactViewController {
         }
     }
     
-    func saveContact(with firstName: String, lastName: String, birthday: String, phone: String, zipcode: String, imageData: Data?=nil) {
+    func saveContact(with firstName: String, lastName: String, birthday: String, phone: String, formattedPhone: String, zipcode: String, imageData: Data?=nil) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
         let managedContext = appDelegate.persistentContainer.viewContext
@@ -419,6 +372,7 @@ fileprivate extension EditContactViewController {
         contact.lastName = lastName
         contact.birthday = birthday
         contact.phone = phone
+        contact.formattedPhone = formattedPhone
         contact.zipcode = zipcode
         if let iData = imageData {
             contact.imageData = iData

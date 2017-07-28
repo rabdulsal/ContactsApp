@@ -27,6 +27,8 @@
 		4CA4CD421F2B8496001E0CDE /* ContactTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CD411F2B8496001E0CDE /* ContactTextField.swift */; };
 		4CA4CD431F2BC436001E0CDE /* Contact+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9766141F2A9D7300A1FBAB /* Contact+CoreDataClass.swift */; };
 		4CA4CD441F2BC43A001E0CDE /* Contact+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9766151F2A9D7300A1FBAB /* Contact+CoreDataProperties.swift */; };
+		4CA4CD461F2BD790001E0CDE /* UIImageView+ContactApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CD451F2BD790001E0CDE /* UIImageView+ContactApp.swift */; };
+		4CA4CD481F2BDCC1001E0CDE /* UIColor+ContactsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CD471F2BDCC1001E0CDE /* UIColor+ContactsApp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +72,8 @@
 		4C9766141F2A9D7300A1FBAB /* Contact+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Contact+CoreDataClass.swift"; sourceTree = "<group>"; };
 		4C9766151F2A9D7300A1FBAB /* Contact+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Contact+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4CA4CD411F2B8496001E0CDE /* ContactTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactTextField.swift; sourceTree = "<group>"; };
+		4CA4CD451F2BD790001E0CDE /* UIImageView+ContactApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+ContactApp.swift"; sourceTree = "<group>"; };
+		4CA4CD471F2BDCC1001E0CDE /* UIColor+ContactsApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+ContactsApp.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +107,8 @@
 			children = (
 				4C15DFEB1F2B062800801176 /* UIButton+ContactApp.swift */,
 				4CA4CD411F2B8496001E0CDE /* ContactTextField.swift */,
+				4CA4CD451F2BD790001E0CDE /* UIImageView+ContactApp.swift */,
+				4CA4CD471F2BDCC1001E0CDE /* UIColor+ContactsApp.swift */,
 			);
 			name = "Extensions / Utilities / Sub-classes";
 			sourceTree = "<group>";
@@ -352,7 +358,9 @@
 				4C47C3F01F2A058F00A92B24 /* ContactService.swift in Sources */,
 				4C9765D61F2A7ACB00A1FBAB /* ContactDataModel.xcdatamodeld in Sources */,
 				4C15DFEC1F2B062800801176 /* UIButton+ContactApp.swift in Sources */,
+				4CA4CD461F2BD790001E0CDE /* UIImageView+ContactApp.swift in Sources */,
 				4C47C3B11F294EF800A92B24 /* AppDelegate.swift in Sources */,
+				4CA4CD481F2BDCC1001E0CDE /* UIColor+ContactsApp.swift in Sources */,
 				4C9766161F2A9D7300A1FBAB /* Contact+CoreDataClass.swift in Sources */,
 				4CA4CD421F2B8496001E0CDE /* ContactTextField.swift in Sources */,
 				4C47C3B31F294EF800A92B24 /* ContactsViewController.swift in Sources */,

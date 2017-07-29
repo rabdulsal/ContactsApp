@@ -1,7 +1,7 @@
 Contacts Manager 
 ====================
 
-A basic Contacts applicatoin that stores a list of persons, including attributes of firstname, lastname, date
+A basic Contacts application that stores a list of persons, including attributes of firstname, lastname, date
 of birth, phone number, zip-code and optional User image
 
 *   Create Contacts

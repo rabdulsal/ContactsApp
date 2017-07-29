@@ -15,12 +15,7 @@ class ContactViewController : UIViewController {
     @IBOutlet weak var birthdayLabel: UILabel!
     @IBOutlet weak var phoneNumberLabel: UILabel!
     @IBOutlet weak var zipcodeLabel: UILabel!
-    @IBOutlet weak var imageView: UIImageView! {
-        didSet {
-            self.imageView.layer.cornerRadius = self.imageView.frame.size.width / 2
-            self.imageView.clipsToBounds = true
-        }
-    }
+    @IBOutlet weak var imageView: ContactImageView!
     
     var contact: Contact!
     var contactDelegate: ContactCreatable?
@@ -75,6 +70,7 @@ fileprivate extension ContactViewController {
         zipcodeLabel.text       = contact.zipcode
         if let iData = contact.imageData {
             imageView.image = UIImage(data: iData)
+            imageView.roundedCorners()
         }
         self.contact = contact
     }

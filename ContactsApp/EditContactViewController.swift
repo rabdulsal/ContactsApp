@@ -43,7 +43,7 @@ class EditContactViewController: UIViewController {
     @IBOutlet weak var fourDigitField: ContactTextField!
     
     @IBOutlet weak var updateContactButton: UpdateContactButton!
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var imageView: ContactImageView!
     @IBOutlet weak var cameraTriggerButton: UIButton!
     
     var contactDelegate: ContactCreatable?
@@ -178,7 +178,6 @@ extension EditContactViewController : UIImagePickerControllerDelegate, UINavigat
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         var chosenImage = UIImage()
         chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage
-        imageView.contentMode = .scaleAspectFit
         imageView.image = chosenImage
         imageData = UIImageJPEGRepresentation(chosenImage, 0.0)
         setImageViewEditStyle()

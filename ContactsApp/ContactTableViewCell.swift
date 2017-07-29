@@ -12,7 +12,7 @@ import UIKit
 class ContactTableViewCell : UITableViewCell {
     
     
-    @IBOutlet weak var contactImageView: UIImageView!
+    @IBOutlet weak var contactImageView: ContactImageView!
     @IBOutlet weak var contactNameLabel: UILabel!
     
     func configureContactCell(contact: Contact) {

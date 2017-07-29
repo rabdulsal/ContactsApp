@@ -9,7 +9,12 @@
 import Foundation
 import UIKit
 
-extension UIImageView {
+class ContactImageView : UIImageView {
+    
+    override open func awakeFromNib() {
+        super.awakeFromNib()
+        self.contentMode = .scaleAspectFill
+    }
     
     func roundedCorners() {
         self.layer.cornerRadius = self.frame.size.width / 2

@@ -30,6 +30,35 @@ class ContactTextField : UITextField {
     var isValidlyComplete: Bool {
         return self.text?.isEmpty == false && maxCharLimitReached
     }
+    
+    func configureTextField(with delegate: UITextFieldDelegate, tag: Int?=nil, returnKey: UIReturnKeyType?=nil, keyboardType: UIKeyboardType?=nil, inputView: UIView?=nil, accessoryView: UIView?=nil, maxCharacters: Int?=nil) {
+        self.delegate = delegate
+        
+        // Optional tag
+        if let t = tag {
+            self.tag = t
+        }
+        // Optional ReturnKeyType
+        if let retKey = returnKey {
+            self.returnKeyType = retKey
+        }
+        // Optional Keyboard Type
+        if let kbType = keyboardType {
+            self.keyboardType = kbType
+        }
+        if let input = inputView {
+            self.inputView = input
+        }
+        // Optional Accessoryview
+        if let accessory = accessoryView {
+            self.inputAccessoryView = accessory
+        }
+        
+        // Optional maxChars
+        if let max = maxCharacters {
+            maxAllowableCharacters = max
+        }
+    }
 }
 
 extension UIViewController {

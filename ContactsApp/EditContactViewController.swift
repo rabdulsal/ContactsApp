@@ -194,36 +194,8 @@ fileprivate extension EditContactViewController {
         if let contact = editingContact {
             decorateTextfields(with: contact)
         }
-        initializeTextFieldInputView()
-        firstNameField.tag = TextfieldType.firstName.rawValue
-        firstNameField.delegate = self
-        firstNameField.inputAccessoryView = makeDoneButtonToolBar()
-        lastNameField.tag = TextfieldType.lastName.rawValue
-        lastNameField.delegate = self
-        lastNameField.inputAccessoryView = makeDoneButtonToolBar()
-        birthYearField.tag = TextfieldType.birthday.rawValue
-        birthYearField.inputAccessoryView = makeDoneButtonToolBar()
-        areacodeField.tag = TextfieldType.areacode.rawValue
-        areacodeField.keyboardType = .phonePad
-        areacodeField.delegate = self
-        areacodeField.maxAllowableCharacters = 3
-        areacodeField.inputAccessoryView = makeDoneButtonToolBar()
-        threeDigitField.tag = TextfieldType.firstThree.rawValue
-        threeDigitField.delegate = self
-        threeDigitField.keyboardType = .phonePad
-        threeDigitField.maxAllowableCharacters = 3
-        threeDigitField.inputAccessoryView = makeDoneButtonToolBar()
-        fourDigitField.tag = TextfieldType.lastFour.rawValue
-        fourDigitField.delegate = self
-        fourDigitField.inputAccessoryView = makeDoneButtonToolBar()
-        fourDigitField.keyboardType = .phonePad
-        fourDigitField.maxAllowableCharacters = 4
-        zipcodeField.tag = TextfieldType.zipcode.rawValue
-        zipcodeField.keyboardType = .phonePad
-        zipcodeField.delegate = self
-        zipcodeField.returnKeyType = .done
-        zipcodeField.maxAllowableCharacters = 5
-        zipcodeField.inputAccessoryView = makeDoneButtonToolBar()
+        configureTextFieldViews()
+        
     }
     
     // MARK: TextField Stuff
@@ -236,7 +208,7 @@ fileprivate extension EditContactViewController {
         if let iData = contact.imageData {
             imageView.image = UIImage(data: iData)
         }
-        (areacodeField.text!, threeDigitField.text!, fourDigitField.text!) = ContactService.deconstructPhoneNumber(with: contact.phone!)
+        (areacodeField.text!, threeDigitField.text!, fourDigitField.text!) = ContactService.deconstructPhoneNumber(with: contact.formattedPhoneNumber!)
     }
     
     func setImageViewEditStyle() {
@@ -246,8 +218,16 @@ fileprivate extension EditContactViewController {
         imageView.roundedCorners()
     }
     
-    func initializeTextFieldInputView() {
-        self.birthYearField.inputView = makeDatePickerView()
+    func configureTextFieldViews() {
+        let datePickerView = makeDatePickerView()
+        let accessoryView = makeDoneButtonToolBar()
+        firstNameField.configureTextField(with: self, tag: TextfieldType.firstName.rawValue, accessoryView: accessoryView)
+        lastNameField.configureTextField(with: self, tag: TextfieldType.lastName.rawValue, accessoryView: accessoryView)
+        birthYearField.configureTextField(with: self, tag: TextfieldType.birthday.rawValue, inputView: datePickerView, accessoryView: accessoryView)
+        areacodeField.configureTextField(with: self, tag: TextfieldType.areacode.rawValue, keyboardType: .phonePad, accessoryView: accessoryView, maxCharacters: 3)
+        threeDigitField.configureTextField(with: self, tag: TextfieldType.firstThree.rawValue, keyboardType: .phonePad, accessoryView: accessoryView, maxCharacters: 3)
+        fourDigitField.configureTextField(with: self, tag: TextfieldType.lastFour.rawValue, keyboardType: .phonePad, accessoryView: accessoryView, maxCharacters: 4)
+        zipcodeField.configureTextField(with: self, tag: TextfieldType.zipcode.rawValue, returnKey: .done, keyboardType: .numberPad, accessoryView: accessoryView, maxCharacters: 5)
     }
     
     @objc func textFieldDidChange(_ sender: Any) {
@@ -337,7 +317,7 @@ fileprivate extension EditContactViewController {
                 $0.firstName == self.editingContact!.firstName &&
                 $0.lastName == self.editingContact!.lastName &&
                 $0.birthday == self.editingContact!.birthday &&
-                $0.phone == self.editingContact!.phone &&
+                $0.phoneDigits == self.editingContact!.phoneDigits &&
                 $0.zipcode == self.editingContact!.zipcode
             }.first
             if let c = contact {
@@ -345,9 +325,9 @@ fileprivate extension EditContactViewController {
                 c.firstName = firstName
                 c.lastName = lastName
                 c.birthday = birthday
-                c.phone = phone
+                c.phoneDigits = phone
                 c.zipcode = zipcode
-                c.formattedPhone = formattedPhone
+                c.formattedPhoneNumber = formattedPhone
                 if let iData = imageData {
                     c.imageData = iData
                 }
@@ -370,8 +350,8 @@ fileprivate extension EditContactViewController {
         contact.firstName = firstName
         contact.lastName = lastName
         contact.birthday = birthday
-        contact.phone = phone
-        contact.formattedPhone = formattedPhone
+        contact.phoneDigits = phone
+        contact.formattedPhoneNumber = formattedPhone
         contact.zipcode = zipcode
         if let iData = imageData {
             contact.imageData = iData

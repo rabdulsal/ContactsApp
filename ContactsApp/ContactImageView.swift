@@ -1,5 +1,5 @@
 //
-//  UIImageView+ContactApp.swift
+//  ContactImageView.swift
 //  ContactsApp
 //
 //  Created by Rashad Abdul-Salaam on 7/28/17.

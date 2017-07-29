@@ -65,7 +65,7 @@ fileprivate extension ContactViewController {
     func decorateView(with contact: Contact) {
         contactNameLabel.text   = "\(contact.firstName!) \(contact.lastName!)"
         birthdayLabel.text      = contact.birthday
-        phoneNumberLabel.text   = contact.formattedPhone
+        phoneNumberLabel.text   = contact.formattedPhoneNumber
         phoneNumberLabel.textColor = UIColor.fusionGreen()
         zipcodeLabel.text       = contact.zipcode
         if let iData = contact.imageData {
@@ -84,7 +84,7 @@ fileprivate extension ContactViewController {
     }
     
     @objc func makePhoneLabelCallable() {
-        if let url = URL(string: "telprompt:\(self.contact.phone!)") {
+        if let url = URL(string: "telprompt:\(self.contact.phoneDigits!)") {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }

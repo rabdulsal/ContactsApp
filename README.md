@@ -8,6 +8,7 @@ of birth, phone number, zip-code and optional User image
 *   View in a list
 *   View Contact in a Detail view
 *   Update Existing contacts
+*   CoreData persistence
 *   Swipe to delete in TableView
 *   Take photos with device
 *   Validations on Edit Contact textFields

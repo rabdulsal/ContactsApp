@@ -45,13 +45,16 @@ class EditContactViewController: UIViewController {
     @IBOutlet weak var updateContactButton: UpdateContactButton!
     @IBOutlet weak var imageView: ContactImageView!
     @IBOutlet weak var cameraTriggerButton: UIButton!
+    @IBOutlet weak var scrollView: UIScrollView!
     
     var contactDelegate: ContactCreatable?
     var editingContact: Contact?
     var editingContactIdx: Int?
-    var activeTextfield: UITextField?
+    var activeTextfield: ContactTextField?
     fileprivate let kMaxMomentImageSize = 340000.0
+    fileprivate let doneToolBarHeight:CGFloat = 70.0
     fileprivate var imageData: Data?
+    fileprivate var autoAdvance = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,6 +62,7 @@ class EditContactViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        registerForKeyboardNotifications()
         verifyFields()
         if imageView.image == nil {
             cameraTriggerButton.setTitle("Add Photo", for: .normal)
@@ -123,7 +127,31 @@ class EditContactViewController: UIViewController {
         }
     }
     
+    // MARK: Keyboard Listeners
+    
+    func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(EditContactViewController.keyboardDidShow(notification:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(EditContactViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    func keyboardWillHide() {
+        let contentInsets = UIEdgeInsets.zero
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+    }
+    
+    func keyboardDidShow(notification: NSNotification) {
+        
+        let info = notification.userInfo
+        let kbSizeValue: NSValue = info?[UIKeyboardFrameBeginUserInfoKey] as! NSValue
+        let kbSize = kbSizeValue.cgRectValue.size
+        let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height+doneToolBarHeight, 0.0)
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+    }
+    
 }
+
 
 // MARK: TextFieldDelegate 
 
@@ -131,7 +159,6 @@ extension EditContactViewController : UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         let tField = textField as! ContactTextField
-        var autoAdvance: Bool
         
         switch TextfieldType(rawValue: textField.tag)! {
         case .areacode, .firstThree, .lastFour: autoAdvance = true
@@ -145,7 +172,6 @@ extension EditContactViewController : UITextFieldDelegate {
             
             let textLength = text.characters.count + string.characters.count - range.length
             if textLength > tField.maxAllowableCharacters {
-                if autoAdvance { advanceTextfields() }
                 return false
             } else {
                 textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -156,7 +182,7 @@ extension EditContactViewController : UITextFieldDelegate {
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.activeTextfield = textField
+        self.activeTextfield = textField as! ContactTextField
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -231,6 +257,7 @@ fileprivate extension EditContactViewController {
     }
     
     @objc func textFieldDidChange(_ sender: Any) {
+        if autoAdvance && activeTextfield!.maxCharLimitReached { advanceTextfields() }
         verifyFields()
     }
     
@@ -359,6 +386,6 @@ fileprivate extension EditContactViewController {
         appDelegate.saveContext()
         contactDelegate?.didSuccessfullyCreateContact(contact: contact)
         self.dismiss(animated: true)
-    }
+    }    
 }
 

@@ -112,10 +112,14 @@ class EditContactViewController: UIViewController {
         
         let formattedPhone = ContactService.makeFormattedPhoneNumber(with: areacode, firstThreeDigits: threeDigit, lastFourDigits: fourDigit)
         let unformattedPhone = ContactService.makePhone(with: areacode, firstThreeDigits: threeDigit, lastFourDigits: fourDigit)
-        if let _ = editingContact {
-            updateContact(with: firstName, lastName: lastName, birthday: birthday, phone: unformattedPhone, formattedPhone: formattedPhone, zipcode: zipcode, imageData: self.imageData)
+        if let eContact = editingContact {
+            ContactService.updateContact(with: eContact, firstName: firstName, lastName: lastName, birthday: birthday, phone: unformattedPhone, formattedPhone: formattedPhone, zipcode: zipcode, imageData: self.imageData, completion: { (contact: Contact) -> Void in
+                self.successfullyUpdatedContactCompletion(contact: contact)
+            })
         } else {
-            saveContact(with: firstName, lastName: lastName, birthday: birthday, phone: unformattedPhone, formattedPhone: formattedPhone, zipcode: zipcode, imageData: self.imageData)
+            ContactService.saveContact(with: firstName, lastName: lastName, birthday: birthday, phone: unformattedPhone, formattedPhone: formattedPhone, zipcode: zipcode, imageData: self.imageData, completion: { (contact: Contact) -> Void in
+                self.successfullyUpdatedContactCompletion(contact: contact)
+            })
         }
     }
     
@@ -329,63 +333,9 @@ fileprivate extension EditContactViewController {
         self.present(imagePicker, animated: true, completion: nil)
     }
     
-    // TODO: Move to ContactService
-    
-    func updateContact(with firstName: String, lastName: String, birthday: String, phone: String, formattedPhone: String, zipcode: String, imageData: Data?=nil) {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        
-        let managedContext = appDelegate.persistentContainer.viewContext
-        var contacts = [Contact]()
-        
-        do {
-            contacts = try managedContext.fetch(Contact.fetchRequest())
-            // TODO: Make separate filter method
-            let contact = contacts.filter {
-                $0.firstName == self.editingContact!.firstName &&
-                $0.lastName == self.editingContact!.lastName &&
-                $0.birthday == self.editingContact!.birthday &&
-                $0.phoneDigits == self.editingContact!.phoneDigits &&
-                $0.zipcode == self.editingContact!.zipcode
-            }.first
-            if let c = contact {
-                // TODO: Createnew Save func from here
-                c.firstName = firstName
-                c.lastName = lastName
-                c.birthday = birthday
-                c.phoneDigits = phone
-                c.zipcode = zipcode
-                c.formattedPhoneNumber = formattedPhone
-                if let iData = imageData {
-                    c.imageData = iData
-                }
-                appDelegate.saveContext()
-                contactDelegate?.didSuccessfullyCreateContact(contact: c)
-                self.dismiss(animated: true)
-            }
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
-    }
-    
-    func saveContact(with firstName: String, lastName: String, birthday: String, phone: String, formattedPhone: String, zipcode: String, imageData: Data?=nil) {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        
-        let managedContext = appDelegate.persistentContainer.viewContext
-        
-        let contact = Contact(context: managedContext)
-        // TODO: Create new save func from here
-        contact.firstName = firstName
-        contact.lastName = lastName
-        contact.birthday = birthday
-        contact.phoneDigits = phone
-        contact.formattedPhoneNumber = formattedPhone
-        contact.zipcode = zipcode
-        if let iData = imageData {
-            contact.imageData = iData
-        }
-        appDelegate.saveContext()
+    func successfullyUpdatedContactCompletion(contact: Contact) {
         contactDelegate?.didSuccessfullyCreateContact(contact: contact)
         self.dismiss(animated: true)
-    }    
+    }
 }
 
